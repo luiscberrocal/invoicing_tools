@@ -104,4 +104,7 @@ ENV/
 # IDE settings
 .vscode/
 .idea/
-.output/
+output/
+
+output/invoice.html
+output/invoice.html

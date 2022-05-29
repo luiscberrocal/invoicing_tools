@@ -7,19 +7,6 @@
 <body>
 <div class="ritz grid-container" dir="ltr">
     <table class="waffle no-grid" cellspacing="0" cellpadding="0">
-        <thead>
-        <tr>
-            <th class="row-header freezebar-origin-ltr"></th>
-            <th id="186203474C0" style="width:48px;" class="column-headers-background">A</th>
-            <th id="186203474C1" style="width:61px;" class="column-headers-background">B</th>
-            <th id="186203474C2" style="width:131px;" class="column-headers-background">C</th>
-            <th id="186203474C3" style="width:90px;" class="column-headers-background">D</th>
-            <th id="186203474C4" style="width:48px;" class="column-headers-background">E</th>
-            <th id="186203474C5" style="width:104px;" class="column-headers-background">F</th>
-            <th id="186203474C6" style="width:104px;" class="column-headers-background">G</th>
-            <th id="186203474C7" style="width:48px;" class="column-headers-background">H</th>
-        </tr>
-        </thead>
         <tbody>
         <tr style="height: 7px">
             <th id="186203474R0" style="height: 7px;" class="row-headers-background">
@@ -152,9 +139,9 @@
                 <div class="row-header-wrapper" style="line-height: 23px">12</div>
             </th>
             <td class="s6"></td>
-            <td class="s7" dir="ltr" colspan="2">{{ client_name }}</td>
+            <td class="s7" dir="ltr" colspan="2">{{ client.name }}</td>
             <td class="s7" dir="ltr" colspan="2">Luis Carlos Berrocal</td>
-            <td class="s7" dir="ltr" colspan="2">105</td>
+            <td class="s7" dir="ltr" colspan="2">{{invoice.number}}</td>
             <td class="s6"></td>
         </tr>
         <tr style="height: 23px">
@@ -162,7 +149,7 @@
                 <div class="row-header-wrapper" style="line-height: 23px">13</div>
             </th>
             <td class="s6"></td>
-            <td class="s7" dir="ltr" colspan="2">RUC {{client_ruc}}</td>
+            <td class="s7" dir="ltr" colspan="2">RUC {{client.ruc}}</td>
             <td class="s7" colspan="2"></td>
             <td class="s1" colspan="2"></td>
             <td class="s6"></td>
@@ -184,7 +171,7 @@
             <td class="s6"></td>
             <td class="s7" dir="ltr" colspan="2"></td>
             <td class="s7" dir="ltr" colspan="2"></td>
-            <td class="s7" dir="ltr" colspan="2">4/30/2021</td>
+            <td class="s7" dir="ltr" colspan="2">{{invoice.due_date}}</td>
             <td class="s6"></td>
         </tr>
         <tr style="height: 20px">

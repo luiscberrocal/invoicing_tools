@@ -22,7 +22,8 @@ class ReportWriter:
 def main(args=None):
     """Console script for invoicing_tools."""
     writer = ReportWriter(Path('./'))
-    data = {'client_name': 'Tesla Motors, Inc.', 'client_ruc': '123-89-0900'}
+    data = {'client': {'name': 'Tesla Motors, Inc.', 'ruc': '123-89-0900'},
+            'invoice': {'number': 1455, 'due_date': '12-may-2022'}}
     output_file = Path('../output') / 'invoice.html'
     writer.write('invoice_template.html', output_file, **data)
     return 0
