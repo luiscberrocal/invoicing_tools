@@ -1,14 +1,19 @@
 """Console script for invoicing_tools."""
 import sys
+from pathlib import Path
+
 import click
+
+from .invoices import ReportWriter
 
 
 @click.command()
 def main(args=None):
     """Console script for invoicing_tools."""
-    click.echo("Replace this message by putting your code into "
-               "invoicing_tools.cli.main")
-    click.echo("See click documentation at https://click.palletsprojects.com/")
+    writer = ReportWriter(Path('./'))
+    data = {'client_name': 'Tesla Motors, Inc.', 'client_ruc': '123-89-0900'}
+    output_file = Path('./output') / 'invoice.html'
+    writer.write('invoice_template.html', output_file, **data)
     return 0
 
 
