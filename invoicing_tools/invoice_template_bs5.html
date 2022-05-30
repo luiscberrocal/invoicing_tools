@@ -12,7 +12,7 @@
     <title>Invoice</title>
 </head>
 <body>
-<div class="container m-2">
+<div class="container m-2 p-2">
 
     <h1>Invoice {{invoice.number}}</h1>
     <div class="row">
@@ -25,7 +25,7 @@
             RUC 8-777-777 DV 98
         </div>
     </div>
-    <div class="row">
+    <div class="row pt-5">
         <div class="col-6">
             <div class="row">
                 <div class="col-3">
@@ -48,7 +48,7 @@
             </div>
         </div>
     </div>
-    <div class="row">
+    <div class="row pt-2 fw-bold">
         <div class="col-1">Id</div>
         <div class="col-5">Description</div>
         <div class="col-2">Qty</div>
@@ -60,10 +60,31 @@
         <div class="col-1">{{item.id}}</div>
         <div class="col-5">{{item.description}}</div>
         <div class="col-2">{{item.quantity}}</div>
-        <div class="col-2">{{item.unit_price}}</div>
-        <div class="col-2">{{item.total}}</div>
+        <div class="col-2 d-flex justify-content-end">{{item.unit_price}}</div>
+        <div class="col-2 d-flex justify-content-end">{{item.total}}</div>
     </div>
     {% endfor %}
+    <div class="row">
+        <div class="col-1"></div>
+        <div class="col-5"></div>
+        <div class="col-2"></div>
+        <div class="col-2">Subtotal</div>
+        <div class="col-2 d-flex justify-content-end">{{invoice.sub_total}}</div>
+    </div>
+    <div class="row">
+        <div class="col-1"></div>
+        <div class="col-5"></div>
+        <div class="col-2"></div>
+        <div class="col-2">Discounts</div>
+        <div class="col-2 d-flex justify-content-end">{{invoice.discount}}</div>
+    </div>
+    <div class="row">
+        <div class="col-1"></div>
+        <div class="col-5"></div>
+        <div class="col-2"></div>
+        <div class="col-2">Grand total</div>
+        <div class="col-2 d-flex justify-content-end">{{invoice.total}}</div>
+    </div>
 </div>
 </body>
 </html>
