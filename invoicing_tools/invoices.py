@@ -23,9 +23,13 @@ def main(args=None):
     """Console script for invoicing_tools."""
     writer = ReportWriter(Path('./'))
     data = {'client': {'name': 'Tesla Motors, Inc.', 'ruc': '123-89-0900'},
-            'invoice': {'number': 1455, 'due_date': '12-may-2022'}}
+            'invoice': {'number': 1455, 'due_date': '12-may-2022', 'total': 200.00},
+            'items': [{'id': 1, 'description': 'Mantenimiento de software en nube Marzo-2022',
+                       'quantity': 1, 'unit_price': 200.00, 'total': 200.00}]}
     output_file = Path('../output') / 'invoice.html'
-    writer.write('invoice_template.html', output_file, **data)
+    template_name = 'invoice_template_bs5.html'
+    writer.write(template_name, output_file, **data)
+    print(f'Template writte: {template_name}')
     return 0
 
 
