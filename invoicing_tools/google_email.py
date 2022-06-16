@@ -1,6 +1,8 @@
 import base64
+import json
 import os
 import pickle
+from pathlib import Path
 from typing import List
 
 from google.auth.transport.requests import Request
@@ -106,6 +108,7 @@ def get_message_detail(message_id, msg_format='metadata', metadata_headers: List
 
 
 if __name__ == '__main__':
+    output_folder = Path('../output')
     CLIENT_FILE = '../output/client_secret_gmail.json'
     API_NAME = 'gmail'
     API_VERSION = 'v1'
@@ -117,9 +120,15 @@ if __name__ == '__main__':
     save_location = os.getcwd()
     email_messages = search_emails(query_string, max_results=5)
 
-    for email_message in email_messages:
+    for i, email_message in enumerate(email_messages):
         messageDetail = get_message_detail(email_message['id'], msg_format='full', metadata_headers=['parts'])
-        print(f'{messageDetail =}')
+        print(f'{i} {messageDetail =}')
+        file = output_folder / f'{i}-email-{messageDetail["id"]}.json'
+        with open(file, 'w') as json_file:
+            json.dump(messageDetail, json_file)
+            if i == 10:
+                break
+
         # messageDetailPayload = messageDetail.get('payload')
 
         # if 'parts' in messageDetailPayload:
