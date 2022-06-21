@@ -49,6 +49,7 @@ def create_service(client_secret_file, api_name, api_version, *scopes, prefix=''
         os.remove(os.path.join(working_dir, token_dir, pickle_file))
         return None
 
+
 class GmailException(Exception):
     """gmail base exception class"""
 
@@ -68,6 +69,8 @@ def search_emails(query_string: str, label_ids: List = None, max_results: int = 
 
         message_items = message_list_response.get('messages')
         next_page_token = message_list_response.get('nextPageToken')
+        if len(message_items) >= 50:
+            return message_items
 
         while next_page_token:
             message_list_response = service.users().messages().list(
@@ -109,7 +112,7 @@ def get_message_detail(message_id, msg_format='metadata', metadata_headers: List
 
 if __name__ == '__main__':
     output_folder = Path('../output')
-    CLIENT_FILE = '../output/client_secret_gmail.json'
+    CLIENT_FILE = output_folder / 'client_secret_gmail.json'
     API_NAME = 'gmail'
     API_VERSION = 'v1'
     SCOPES = ['https://mail.google.com/']
@@ -123,7 +126,7 @@ if __name__ == '__main__':
     for i, email_message in enumerate(email_messages):
         messageDetail = get_message_detail(email_message['id'], msg_format='full', metadata_headers=['parts'])
         print(f'{i} {messageDetail =}')
-        file = output_folder / f'{i}-email-{messageDetail["id"]}.json'
+        file = output_folder / 'emails' / f'{i}-email-{messageDetail["id"]}.json'
         with open(file, 'w') as json_file:
             json.dump(messageDetail, json_file)
             if i == 10:
