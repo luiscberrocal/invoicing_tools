@@ -7,6 +7,9 @@ def ocr_file(filename: Path) -> str:
     string_value = pytesseract.image_to_string(str(filename))
     return string_value.replace('\n', ' ')
 
+def ocr_lines(filename: Path) -> str:
+    string_value = pytesseract.image_to_string(str(filename))
+    return string_value.split('\n')
 
 if __name__ == '__main__':
     file = Path('../output/tag2.jpg')

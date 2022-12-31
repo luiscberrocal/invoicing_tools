@@ -106,6 +106,4 @@ ENV/
 .idea/
 output/
 
-output/invoice.html
-output/invoice.html
-/invoicing_tools/token files/token_gmail_v1.pickle
+.envs/
