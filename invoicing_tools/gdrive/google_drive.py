@@ -1,9 +1,6 @@
 import json
 import os
-import pickle
 from pathlib import Path
-
-from django_scaffolding_tools._experimental.backup_envs.gdrive import get_g_drive_credentials
 
 
 def main():
