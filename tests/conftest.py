@@ -17,3 +17,13 @@ def fixtures_folder():
     return folder
 
 
+@pytest.fixture(scope='session')
+def envs_folder():
+    folder = Path(__file__).parent.parent / '.envs'
+    return folder
+
+
+@pytest.fixture(scope='session')
+def google_secrets_file():
+    g_file = Path(__file__).parent.parent / '.envs' / 'client_secret.json'
+    return g_file

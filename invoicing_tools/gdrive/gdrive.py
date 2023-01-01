@@ -52,6 +52,22 @@ class GDrive:
                 pickle.dump(creds, token)
         return creds
 
+    def list_folders(self, page_size: int = 10, name: str = None):
+        query = "mimeType = 'application/vnd.google-apps.folder'"
+        if name is not None:
+            query = f"{query} and name contains '{name}'"
+        resource = self.service.files()
+        result = resource.list(pageSize=page_size, fields="files(id, name, parents)",
+                               q=query, ).execute()
+
+        return result
+
+    def get_folder(self, name:str):
+        pass
+
+
+
+
     def upload(self, file_to_upload: Path, folder_id: str):
         filename = file_to_upload.name
         mime_type = 'application/octet-stream'
@@ -161,6 +177,7 @@ def main():
         '/home/luiscberrocal/PycharmProjects/django_scaffolding_tools/.envs/google_drive/google_drive_folders_id.json')
     r = gdrive.upload(test_file, folder_id)
     assert r == ''
+
 
 if __name__ == '__main__':
     main()
