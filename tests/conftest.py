@@ -1,6 +1,7 @@
 import json
 from datetime import datetime
 from pathlib import Path
+from typing import Any, Dict
 
 import pytest
 
@@ -24,6 +25,14 @@ def envs_folder():
 
 
 @pytest.fixture(scope='session')
-def google_secrets_file():
-    g_file = Path(__file__).parent.parent / '.envs' / 'client_secret.json'
+def google_secrets_file(envs_folder):
+    g_file = envs_folder / 'client_secret.json'
     return g_file
+
+
+@pytest.fixture(scope='session')
+def app_configuration(envs_folder) -> Dict[str, Any]:
+    g_file = envs_folder / 'app_configuration.json'
+    with open(g_file, 'r') as j_file:
+        config = json.load(j_file)
+    return config

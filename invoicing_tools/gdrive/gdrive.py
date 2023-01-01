@@ -52,21 +52,34 @@ class GDrive:
                 pickle.dump(creds, token)
         return creds
 
-    def list_folders(self, page_size: int = 10, name: str = None):
+    def _get_folders(self, page_size: int = 10, name: str = None, exact: bool = False):
         query = "mimeType = 'application/vnd.google-apps.folder'"
         if name is not None:
-            query = f"{query} and name contains '{name}'"
+            if exact:
+                query = f"{query} and name = '{name}'"
+            else:
+                query = f"{query} and name contains '{name}'"
         resource = self.service.files()
-        result = resource.list(pageSize=page_size, fields="files(id, name, parents)",
+        result = resource.list(pageSize=page_size, fields="files(id, name, mimeType, kind, parents)",
                                q=query, ).execute()
+        folders = result.get('files', [])
+        # result = resource.list(pageSize=page_size, q=query, ).execute()
+        if exact and len(folders) > 1:
+            raise Exception(f'More than one folder found for folder name "{name}"')
+        return folders
 
-        return result
-
-    def get_folder(self, name:str):
+    def get_folder(self, name: str):
         pass
 
-
-
+    def list_files(self, folder_name: str, page_size: int = 100):
+        folder = self._get_folders(name=folder_name, exact=True)
+        folder_id = folder[0].get('id')
+        query = f"'{folder_id}' in parents"
+        resource = self.service.files()
+        result = resource.list(pageSize=page_size, fields="nextPageToken, files(id, name, mimeType, kind, parents)",
+                               q=query, ).execute()
+        files = result.get('files', [])
+        return files
 
     def upload(self, file_to_upload: Path, folder_id: str):
         filename = file_to_upload.name
