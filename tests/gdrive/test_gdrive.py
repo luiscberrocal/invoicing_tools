@@ -16,3 +16,13 @@ def test_list_files(google_secrets_file, app_configuration):
     google_drive = GDrive(google_secrets_file)
     file_list = google_drive.list_files(folder_name)
     assert len(file_list) > 0
+
+
+def test_download_file(google_secrets_file, output_folder, raw_file_list):
+    file_data = raw_file_list[0]
+    file_id = file_data['id']
+    name = file_data['name']
+    google_drive = GDrive(google_secrets_file)
+    out_file = google_drive._download_file(file_id, name, output_folder)
+    assert out_file.exists()
+
