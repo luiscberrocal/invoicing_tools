@@ -1,28 +1,25 @@
 from pathlib import Path
+from typing import List
 
 import pytesseract
+from pdf2image import convert_from_path
 
 
 def ocr_file(filename: Path) -> str:
     string_value = pytesseract.image_to_string(str(filename))
     return string_value.replace('\n', ' ')
 
-def ocr_lines(filename: Path) -> str:
+
+def ocr_lines(filename: Path) -> List[str]:
     string_value = pytesseract.image_to_string(str(filename))
     return string_value.split('\n')
 
-if __name__ == '__main__':
-    file = Path('../output/tag2.jpg')
-    print(file.exists())
-    scanned = ocr_file(file)
-    print(scanned)
 
-    file = Path('../output/tag1.jpg')
-    print(file.exists())
-    scanned = ocr_file(file)
-    print(scanned)
-
-    file = Path('../output/tag3.jpg')
-    print(file.exists())
-    scanned = ocr_file(file)
-    print(scanned)
+def ocr_pdf_file(pdf_file: Path, dpi: int = 600, multi_paged: bool = False) -> List[str]:
+    pdf_pages = convert_from_path(pdf_file, dpi)
+    jpeg_file = pdf_file.parent / f'{pdf_file.stem}.jpg'
+    if multi_paged:
+        raise Exception('Not supported yet')
+    pdf_pages[0].save(jpeg_file, 'JPEG')
+    scanned = ocr_lines(jpeg_file)
+    return scanned
