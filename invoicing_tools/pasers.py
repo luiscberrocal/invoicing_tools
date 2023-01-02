@@ -5,6 +5,8 @@ from pathlib import Path
 from re import Pattern
 from typing import List, Dict, Any, Tuple
 
+from invoicing_tools.models import FiscalInvoice
+
 
 def parse_for_data(lines: List[str], pattern: Pattern, pattern_names: List[str]) -> Dict[str, Any]:
     for i, line in enumerate(lines, 1):
@@ -22,12 +24,14 @@ def fiscal_invoice_line_parser(lines: List[str]) -> Dict[str, Any]:
     date_regex = re.compile(r"FECHA:\s(?P<day>\d{2})/(?P<month>\d{2})/(?P<year>\d{4})\s"
                             r"(?P<hour>\d{2}:(?P<minute>\d{2}))")
     ruc_regex = re.compile(r"RUC/CIP:\s(?P<ruc>[0-9\-]+)")
+    amount_regex = re.compile(r"(?:TOTAL|EFECTIVO)\sB/\.(?P<amount>[\d,\.]+)")
     company_regex = re.compile(r"RAZON\sSOCIAL:\s(?P<company>.+)")
     fiscal_invoice = dict()
     fiscal_invoice['invoice'] = parse_for_data(lines, invoice_regex, ['machine', 'invoice'])
     fiscal_invoice['date'] = parse_for_data(lines, date_regex, ['day', 'month', 'year', 'hour', 'minute'])
     fiscal_invoice['ruc'] = parse_for_data(lines, ruc_regex, ['ruc'])
     fiscal_invoice['company'] = parse_for_data(lines, company_regex, ['company'])
+    fiscal_invoice['amount'] = parse_for_data(lines, amount_regex, ['amount'])
     return fiscal_invoice
 
 
@@ -49,7 +53,7 @@ def save_invoice_data_to_file(txt_file: Path, json_file: Path = None):
 def update_missing_invoice_data(folder: Path):
     json_files = folder.glob('**/*.json')
     defaults = {'invoice': {'machine': '', 'invoice': ''}, 'date': {'date': ''},
-                'ruc': {'ruc': ''}, 'company': {'company': ''}}
+                'ruc': {'ruc': ''}, 'company': {'company': ''}, 'amount': {'amount': ''}}
     for json_file in json_files:
         with open(json_file, 'r') as j_file:
             invoice_data = json.load(j_file)
@@ -77,6 +81,11 @@ def update_missing_invoice_data(folder: Path):
     defaults_file = folder / '_defaults.json'
     with open(defaults_file, 'w') as j_file:
         json.dump(defaults, j_file)
+
+
+def json_file_to_model(json_file: Path) -> FiscalInvoice:
+    with open(json_file, 'r') as j_file:
+        invoice_data = json.load(j_file)
 
 
 if __name__ == '__main__':

@@ -23,3 +23,13 @@ def ocr_pdf_file(pdf_file: Path, dpi: int = 600, multi_paged: bool = False) -> L
     pdf_pages[0].save(jpeg_file, 'JPEG')
     scanned = ocr_lines(jpeg_file)
     return scanned
+
+
+def ocr_pdfs_in_folder(folder: Path):
+    pdf_files = folder.glob('**/*.pdf')
+    for pdf_file in pdf_files:
+        lines = ocr_pdf_file(pdf_file)
+        txt_file = folder / f'{pdf_file.stem}.txt'
+        with open(txt_file, 'w') as txt:
+            for i, line in enumerate(lines):
+                txt.write(f'{line}\n')
