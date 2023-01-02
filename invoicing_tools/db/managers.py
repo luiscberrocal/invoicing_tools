@@ -11,7 +11,9 @@ class ModelEncoder(json.JSONEncoder):
 
     def default(self, obj):
         if isinstance(obj, BaseModel):
-            return obj.dict()
+            object_data = obj.dict()
+            object_data['__extended_json_type__'] = obj.__class__.__name__
+            return object_data
         elif isinstance(obj, datetime):
             return obj.strftime('%Y-%m-%d %H:%M')
         else:
@@ -25,6 +27,16 @@ class JSONDatabase:
     def __init__(self, db_file: Path):
         self.db_file = db_file
         self.database = dict()
+
+    def load_data(self):
+        with open(self.db_file, 'r') as json_file:
+            self.database = json.load(json_file)
+
+    def get_person(self, ruc: str):
+        return self.database[self.PERSON_TABLE].get(ruc)
+
+    def get_invoices(self, number: str):
+        return self.database[self.INVOICE_TABLE].get(number)
 
     def add_person(self, person: JurisPerson):
         if not self.database.get(self.PERSON_TABLE):
