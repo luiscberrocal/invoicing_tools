@@ -20,6 +20,26 @@ class ModelEncoder(json.JSONEncoder):
             return json.JSONEncoder.default(obj)
 
 
+class ModelDecoder(json.JSONDecoder):
+    def __init__(self, **kwargs):
+        kwargs["object_hook"] = self.object_hook
+        super().__init__(**kwargs)
+
+    def object_hook(self, obj):
+        if isinstance(obj, dict):
+            json_type = obj.get('__extended_json_type__')
+            if json_type == 'JurisPerson':
+                new_obj = JurisPerson(**obj)
+                return new_obj
+            elif json_type == 'FiscalInvoice':
+                new_obj = FiscalInvoice(**obj)
+                return new_obj
+            else:
+                return obj
+        else:
+            return obj
+
+
 class JSONDatabase:
     PERSON_TABLE = 'persons'
     INVOICE_TABLE = 'invoices'
@@ -27,16 +47,23 @@ class JSONDatabase:
     def __init__(self, db_file: Path):
         self.db_file = db_file
         self.database = dict()
+        self.load_data()
 
     def load_data(self):
         with open(self.db_file, 'r') as json_file:
-            self.database = json.load(json_file)
+            self.database = json.load(json_file, cls=ModelDecoder)
 
     def get_person(self, ruc: str):
         return self.database[self.PERSON_TABLE].get(ruc)
 
     def get_invoices(self, number: str):
         return self.database[self.INVOICE_TABLE].get(number)
+
+    def list_persons(self):
+        object_list = list()
+        for key, item in self.database[self.PERSON_TABLE].items():
+            object_list.append(item)
+        return object_list
 
     def add_person(self, person: JurisPerson):
         if not self.database.get(self.PERSON_TABLE):
