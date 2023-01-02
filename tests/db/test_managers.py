@@ -38,9 +38,15 @@ class TestJSONDatabase:
         database.add_fiscal_invoice(invoice)
         database.save()
         assert db_file.exists()
+
     def test_list_person(self, output_folder):
         db_file = output_folder / '_json_db2.json'
         database = JSONDatabase(db_file)
-        persons =database.list_persons()
+        persons = database.list_persons()
         assert len(persons) == 2
         assert persons[0].short_name == 'CMMA'
+
+    def test_empty_db(self, fixtures_folder):
+        db_file = fixtures_folder / 'empty_db.json'
+        database = JSONDatabase(db_file)
+        assert len(database.list_persons()) == 0

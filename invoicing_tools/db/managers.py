@@ -1,5 +1,6 @@
 import json
 from datetime import datetime
+from json import JSONDecodeError
 from pathlib import Path
 
 from pydantic import BaseModel
@@ -48,10 +49,17 @@ class JSONDatabase:
         self.db_file = db_file
         self.database = dict()
         self.load_data()
+        if not self.database.get(self.PERSON_TABLE):
+            self.database[self.PERSON_TABLE] = dict()
+        if not self.database.get(self.INVOICE_TABLE):
+            self.database[self.INVOICE_TABLE] = dict()
 
     def load_data(self):
-        with open(self.db_file, 'r') as json_file:
-            self.database = json.load(json_file, cls=ModelDecoder)
+        try:
+            with open(self.db_file, 'r') as json_file:
+                self.database = json.load(json_file, cls=ModelDecoder)
+        except JSONDecodeError:
+            pass
 
     def get_person(self, ruc: str):
         return self.database[self.PERSON_TABLE].get(ruc)
@@ -66,9 +74,6 @@ class JSONDatabase:
         return object_list
 
     def add_person(self, person: JurisPerson):
-        if not self.database.get(self.PERSON_TABLE):
-            self.database[self.PERSON_TABLE] = dict()
-
         person_in_db = self.database[self.PERSON_TABLE].get(person.ruc)
         if person_in_db is None:
             self.database[self.PERSON_TABLE][person.ruc] = person
@@ -76,8 +81,6 @@ class JSONDatabase:
             raise Exception(f'Person with ruc {person.ruc} already exists {person.name}')
 
     def add_fiscal_invoice(self, invoice: FiscalInvoice):
-        if not self.database.get(self.INVOICE_TABLE):
-            self.database[self.INVOICE_TABLE] = dict()
 
         in_db = self.database[self.INVOICE_TABLE].get(invoice.number)
         if in_db is None:
