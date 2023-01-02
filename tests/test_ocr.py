@@ -30,3 +30,15 @@ def test_ocr_pdf(output_folder):
         for i, line in enumerate(lines):
             print(f'>> {i} {line}')
             txt.write(f'{line}\n')
+
+
+def test_ocr_pdf_multiple(output_folder):
+    folder = output_folder / 'invoices_to_process'
+    pdf_files = folder.glob('**/*.pdf')
+    for pdf_file in pdf_files:
+        lines = ocr_pdf_file(pdf_file)
+        txt_file = folder / f'{pdf_file.stem}.txt'
+        with open(txt_file, 'w') as txt:
+            for i, line in enumerate(lines):
+                print(f'>> {i} {line}')
+                txt.write(f'{line}\n')

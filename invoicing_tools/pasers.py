@@ -1,9 +1,12 @@
+import json
 import re
+import webbrowser
+from pathlib import Path
 from re import Pattern
 from typing import List, Dict, Any, Tuple
 
 
-def parse_for_data(lines: List[str], pattern: Pattern, pattern_names:List[str]) -> Dict[str, Any]:
+def parse_for_data(lines: List[str], pattern: Pattern, pattern_names: List[str]) -> Dict[str, Any]:
     for i, line in enumerate(lines, 1):
         match = pattern.match(line)
         if match:
@@ -26,3 +29,57 @@ def fiscal_invoice_line_parser(lines: List[str]) -> Dict[str, Any]:
     fiscal_invoice['ruc'] = parse_for_data(lines, ruc_regex, ['ruc'])
     fiscal_invoice['company'] = parse_for_data(lines, company_regex, ['company'])
     return fiscal_invoice
+
+
+def parse_invoice_text_file(txt_file: Path) -> Dict[str, Any]:
+    with open(txt_file, 'r') as txt:
+        lines = txt.readlines()
+    fiscal_invoice = fiscal_invoice_line_parser(lines)
+    return fiscal_invoice
+
+
+def save_invoice_data_to_file(txt_file: Path, json_file: Path = None):
+    fiscal_invoice = parse_invoice_text_file(txt_file)
+    if json_file is None:
+        json_file = txt_file.parent / f'{txt_file.stem}.json'
+    with open(json_file, 'w') as j_file:
+        json.dump(fiscal_invoice, j_file)
+
+
+def update_missing_invoice_data(folder: Path):
+    json_files = folder.glob('**/*.json')
+    defaults = {'invoice': {'machine': '', 'invoice': ''}, 'date': {'date': ''},
+                'ruc': {'ruc': ''}, 'company': {'company': ''}}
+    for json_file in json_files:
+        with open(json_file, 'r') as j_file:
+            invoice_data = json.load(j_file)
+        open_image = False
+        for data_field in defaults.keys():
+            if invoice_data.get(data_field) is None:
+                if not open_image:
+                    jpeg_file = json_file.parent / f'{json_file.stem}.jpg'
+                    print('Opening image in browser')
+                    webbrowser.open(str(jpeg_file))
+                    open_image = True
+                for key, item in defaults[data_field].items():
+                    default = item
+                    val = input(f'{key} for {json_file.stem}.jpg [{default}]')
+                    if invoice_data.get(data_field) is None:
+                        invoice_data[data_field] = dict()
+                    if val == '':
+                        val = item
+                    invoice_data[data_field][key] = val
+                    if key not in ['date', 'invoice']:
+                        defaults[data_field][key] = val
+
+        with open(json_file, 'w') as j_file:
+            json.dump(invoice_data, j_file, indent=4)
+    defaults_file = folder / '_defaults.json'
+    with open(defaults_file, 'w') as j_file:
+        json.dump(defaults, j_file)
+
+
+if __name__ == '__main__':
+    mfolder = Path('/home/luiscberrocal/PycharmProjects/invoicing_tools/'
+                   'output/invoices_to_process')
+    update_missing_invoice_data(mfolder)
