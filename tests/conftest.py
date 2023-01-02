@@ -5,6 +5,8 @@ from typing import Any, Dict, List
 
 import pytest
 
+from invoicing_tools.db.managers import JSONDatabase
+
 
 @pytest.fixture(scope='session')
 def output_folder():
@@ -44,3 +46,11 @@ def raw_file_list(envs_folder) -> List[Dict[str, Any]]:
     with open(g_file, 'r') as j_file:
         data = json.load(j_file)
     return data
+
+
+@pytest.fixture(scope='session')
+def database(envs_folder) -> JSONDatabase:
+    g_file = envs_folder / 'json_db2.json'
+    db = JSONDatabase(g_file)
+    return db
+

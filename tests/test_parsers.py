@@ -1,6 +1,7 @@
 import json
 import re
 
+from invoicing_tools.db.managers import JSONDatabase
 from invoicing_tools.pasers import fiscal_invoice_line_parser, parse_invoice_text_file, json_file_to_model
 
 
@@ -43,3 +44,14 @@ def test_json_file_to_model2(fixtures_folder):
     assert fiscal_invoice.company == 'CMMI'
     assert fiscal_invoice.amount == 2000.00
     assert fiscal_invoice.number == 1
+
+
+def test_populate_data(envs_folder, output_folder):
+    folder = output_folder / 'invoices_to_process'
+    json_files = folder.glob('**/*.json')
+    db_file = envs_folder / 'json_db2.json'
+    database = JSONDatabase(db_file)
+    for json_file in json_files:
+        invoice = json_file_to_model(json_file)
+        database.add_fiscal_invoice(invoice)
+        database.save()
