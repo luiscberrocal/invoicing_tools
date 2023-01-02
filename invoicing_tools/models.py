@@ -6,6 +6,7 @@ from pydantic import BaseModel
 
 
 class JurisPerson(BaseModel):
+    short_name: str
     name: str
     ruc: str
     dv: Optional[str]
@@ -18,3 +19,4 @@ class FiscalInvoice(BaseModel):
     company: Optional[str]
     amount: float
     file: Optional[Path]
+    person: Optional[JurisPerson]
