@@ -1,6 +1,7 @@
 import json
 import re
 import webbrowser
+from datetime import datetime
 from pathlib import Path
 from re import Pattern
 from typing import List, Dict, Any, Tuple
@@ -22,10 +23,11 @@ def parse_for_data(lines: List[str], pattern: Pattern, pattern_names: List[str])
 def fiscal_invoice_line_parser(lines: List[str]) -> Dict[str, Any]:
     invoice_regex = re.compile(r"FACTURA:\s(?P<machine>[A-Z0-9]+)-(?P<invoice>\d+)")
     date_regex = re.compile(r"FECHA:\s(?P<day>\d{2})/(?P<month>\d{2})/(?P<year>\d{4})\s"
-                            r"(?P<hour>\d{2}:(?P<minute>\d{2}))")
+                            r"(?P<hour>\d{2}):(?P<minute>\d{2})")
     ruc_regex = re.compile(r"RUC/CIP:\s(?P<ruc>[0-9\-]+)")
     amount_regex = re.compile(r"(?:TOTAL|EFECTIVO)\sB/\.(?P<amount>[\d,\.]+)")
     company_regex = re.compile(r"RAZON\sSOCIAL:\s(?P<company>.+)")
+
     fiscal_invoice = dict()
     fiscal_invoice['invoice'] = parse_for_data(lines, invoice_regex, ['machine', 'invoice'])
     fiscal_invoice['date'] = parse_for_data(lines, date_regex, ['day', 'month', 'year', 'hour', 'minute'])
@@ -83,9 +85,31 @@ def update_missing_invoice_data(folder: Path):
         json.dump(defaults, j_file)
 
 
+def parse_date(date_data: Dict[str, Any]) -> datetime:
+    if date_data.get('date'):
+        date = datetime.strptime(date_data['date'], '%Y-%m-%d %H:%M')
+        return date
+    else:
+        year = int(date_data['year'])
+        month = int(date_data['month'])
+        day = int(date_data['day'])
+        hour = int(date_data['hour'])
+        minute = int(date_data['minute'])
+        date = datetime(year, month, day, hour, minute)
+        return date
+
+
 def json_file_to_model(json_file: Path) -> FiscalInvoice:
     with open(json_file, 'r') as j_file:
         invoice_data = json.load(j_file)
+    invoice_dict = dict()
+    invoice_dict['number'] = invoice_data['invoice']['invoice']
+    invoice_dict['date'] = parse_date(invoice_data['date'])
+    invoice_dict['ruc'] = invoice_data['ruc']['ruc']
+    invoice_dict['company'] = invoice_data['company']['company']
+    invoice_dict['amount'] = invoice_data['amount']['amount'].replace(',', '')
+    fiscal_invoice = FiscalInvoice(**invoice_dict)
+    return fiscal_invoice
 
 
 if __name__ == '__main__':

@@ -1,7 +1,7 @@
 import json
 import re
 
-from invoicing_tools.pasers import fiscal_invoice_line_parser, parse_invoice_text_file
+from invoicing_tools.pasers import fiscal_invoice_line_parser, parse_invoice_text_file, json_file_to_model
 
 
 def test_parse():
@@ -28,3 +28,18 @@ def test_parse_files(output_folder):
         with open(json_file, 'w') as j_file:
             json.dump(invoice_data, j_file)
 
+
+def test_json_file_to_mode(fixtures_folder):
+    json_file = fixtures_folder / 'fiscal_invoice_manual.json'
+    fiscal_invoice = json_file_to_model(json_file)
+    assert fiscal_invoice.company == 'CMMI'
+    assert fiscal_invoice.amount == 200.00
+    assert fiscal_invoice.number == 6
+
+
+def test_json_file_to_model2(fixtures_folder):
+    json_file = fixtures_folder / 'fiscal_invoice_ocr_date.json'
+    fiscal_invoice = json_file_to_model(json_file)
+    assert fiscal_invoice.company == 'CMMI'
+    assert fiscal_invoice.amount == 2000.00
+    assert fiscal_invoice.number == 1

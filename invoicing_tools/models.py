@@ -12,8 +12,8 @@ class JurisPerson(BaseModel):
 
 
 class FiscalInvoice(BaseModel):
-    date: datetime
     number: int
+    date: datetime
     ruc: str
     company: Optional[str]
     amount: float
