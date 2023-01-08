@@ -106,5 +106,6 @@ ENV/
 .idea/
 output/
 
-output/invoice.html
-output/invoice.html
+.envs/
+
+invoicing_tools/gdrive/sample_code.py

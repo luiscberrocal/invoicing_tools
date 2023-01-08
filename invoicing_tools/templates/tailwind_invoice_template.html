@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Invoice</title>
+    <link href="main.css" rel="stylesheet"/>
+</head>
+<body>
+<section id="company-header">
+    <div class="mx-10">
+        <div class="bg-blue-700 p-2"></div>
+        <h1 class="px-10 text-4xl font-bold">
+            Lucy K. Baratheon
+        </h1>
+        <p class="px-10 text-gray-600">RUC 9-7777-9999 DV 56</p>
+        <p class="px-10 text-gray-600">Panama</p>
+    </div>
+</section>
+<section id="invoice-details">
+    <div class="flex">
+        <div class="mx-10 pt-10 w-1/2">
+            <h2 class="px-12 text-5xl font-bold text-blue-700">
+                Invoice
+            </h2>
+        </div>
+        <div class="mx-10 pt-10 w-1/2 text-right">
+            <p class="px-12 text-2xl font-bold">Number: <span class="text-red-700">000100</span></p>
+        </div>
+    </div>
+    <div class="flex px-12">
+        <!-- Client info -->
+        <div class="flex-col mx-10 pt-4 w-1/2">
+            <div class="flex-row font-bold">
+                Invoice to:
+            </div>
+            <div class="flex-row">
+                <p>Andorian Clinic of the Free Members of the faith</p>
+                <p>RUC 88788-9999-9999-00</p>
+            </div>
+        </div>
+        <!-- Date -->
+        <div class="flex-col mx-10 pt-4 w-1/4">
+            <div class="flex-row font-bold">
+                Date:
+            </div>
+            <div class="flex-row">
+                <p>2022-10-04</p>
+            </div>
+        </div>
+        <!-- Due date -->
+        <div class="flex-col mx-10 pt-4 w-1/4">
+            <div class="flex-row font-bold">
+                Due date:
+            </div>
+            <div class="flex-row">
+                <p>2022-10-30</p>
+            </div>
+        </div>
+    </div>
+</section>
+</body>
+</html>

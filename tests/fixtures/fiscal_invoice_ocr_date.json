@@ -1,0 +1,24 @@
+{
+    "invoice": {
+        "machine": "TFHKC455555",
+        "invoice": "0000001",
+        "line_number": 7
+    },
+    "date": {
+        "day": "02",
+        "month": "08",
+        "year": "2022",
+        "hour": "07",
+        "minute": "23",
+        "line_number": 8
+    },
+    "ruc": {
+        "ruc":  "5555-09-111-3-2022"
+    },
+    "company": {
+        "company": "CMMI"
+    },
+    "amount": {
+        "amount": "2,000.00"
+    }
+}

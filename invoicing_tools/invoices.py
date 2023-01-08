@@ -48,7 +48,8 @@ def main(args=None):
                        'quantity': 1, 'unit_price': '200.00', 'total': '200.00'}]}
     output_file = Path('../output') / 'invoice.html'
     pdf_output_file = Path('../output') / 'invoice.pdf'
-    template_name = 'invoice_template_bs5.html'
+    template_name = 'templates/bootstrap5_invoice_template.html'
+    template_name = 'templates/tailwind_invoice_template.html'
     writer.write(template_name, output_file, **data)
     html2pdf(output_file, pdf_output_file)
     print(f'Template written: {template_name}')
