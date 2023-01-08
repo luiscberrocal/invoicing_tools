@@ -12,7 +12,7 @@ from ..utils import backup_file
 class ConfigurationManager:
     DEFAULT_CONFIG_FOLDER_NAME = '.invoicing_tools'
     DEFAULT_CONFIG_FILENAME = 'configuration.toml'
-    APP_NAME = 'gl-parser'
+    APP_NAME = 'invoicing-tools'
 
     def __init__(self, config_folder: Optional[Path] = None,
                  config_filename: Optional[str] = None):
@@ -28,46 +28,53 @@ class ConfigurationManager:
         self.config_backup_folder = self.config_folder / 'backups'
         self.logs_folder = self.config_folder / 'logs'
 
+        self.app_folder = Path().home() / 'Documents' / self.APP_NAME
         self.username = os.getlogin()
         self.prep_config()
 
     def get_sample_config(self) -> Dict[str, Any]:
-        home = Path().home()
         data = {
             'application': {
-                'output_folder': {
-                    'folder': str(home / 'output_general_ledgers'),
-                    'prompt': 'Directorio de salida'
+                'folder': {
+                    'folder': str(self.app_folder),
+                    'prompt': 'Application folder'
                 },
-                'parsed_folder': {
-                    'folder': str(home / 'parsed_general_ledgers'),
-                    'prompt': 'Directorio de archivos procesados'
+                'output_folder': {
+                    'folder': str(self.app_folder / 'output'),
+                    'prompt': 'Input folder'
+                },
+                'processed_folder': {
+                    'folder': str(self.app_folder / 'processed'),
+                    'prompt': 'Processed folder'
                 },
                 'input_folder': {
-                    'folder': str(home / 'input_general_ledgers'),
-                    'prompt': 'Directorio de entrada'
+                    'folder': str(self.app_folder / 'input'),
+                    'prompt': 'Input folder'
                 },
                 'timestamp_format': '%Y%m%d_%H%M%S'
+            },
+            'database': {
+                'db_file': {
+                    'filename': str(self.config_folder / 'invoicing_db.json'),
+                    'prompt': 'JSON database file'
+                }
             },
             'logs': {
                 'folder': str(self.logs_folder),
                 'filename': f'{self.APP_NAME}.log',
                 'backup_count': 3
             },
-            'parsers': {
-                'sheet_name': 'General Ledger',
-                'start_row': 6,
-                'column_mappings': {
-                    '1': {'name': 'account_id', 'title': 'Account ID', 'width': 12},
-                    '2': {'name': 'account_description', 'title': 'Account Description', 'width': 24},
-                    '3': {'name': 'date', 'title': 'Date', 'number_format': 'DD/MM/YYYY', 'width': 12},
-                    '4': {'name': 'reference', 'title': 'Reference', 'width': 30},
-                    '5': {'name': 'journal', 'title': 'Jrnl', 'width': 12},
-                    '6': {'name': 'description', 'title': 'Trans Description', 'width': 36},
-                    '7': {'name': 'debit_amount', 'title': 'Debit Amt', 'number_format': '#,##0.00', 'width': 12},
-                    '8': {'name': 'credit_amount', 'title': 'Credit Amt', 'number_format': '#,##0.00', 'width': 12},
-                    '9': {'name': 'balance', 'title': 'Balance', 'number_format': '#,##0.00', 'width': 12},
-                }}
+            'google': {
+                'secrets_file': {
+                    'filename': str(self.config_folder / 'client_secrets.json'),
+                    'prompt': 'Client secrets file'
+                },
+                'scanned_folder': {
+                    "id": "",
+                    "name": "EMR Facturas Scanned",
+                    'prompt': 'Google drive scanned folder name'
+                }
+            },
         }
         return data
 
@@ -123,5 +130,3 @@ class ConfigurationManager:
     def get_current(cls):
         config = cls()
         return config.get_configuration()
-
-

@@ -107,3 +107,5 @@ ENV/
 output/
 
 .envs/
+
+invoicing_tools/gdrive/sample_code.py
