@@ -1,4 +1,6 @@
 import json
+import shutil
+from datetime import datetime
 from pathlib import Path
 from typing import Union, Dict, Any, List
 
@@ -27,3 +29,21 @@ def quick_write(data: Union[Dict[str, Any], List[Dict[str, Any]]], file: str, ou
         folder = output_folder / output_subfolder
     filename = quick_json_write(data, file, folder, over_write=over_write)
     return filename
+
+
+def backup_file(filename: Path, backup_folder: Path, add_version: bool = True) -> Path:
+    if not backup_folder.is_dir():
+        error_message = f'Backup folder has to be a folder.' \
+                        f' Supplied: {backup_folder}. Type: {type(backup_folder)}'
+        raise CoverLetterException(error_message)
+
+    datetime_format = '%Y%m%d_%H%M%S'
+    if add_version:
+        from . import __version__ as current_version
+        version_val = f'v{current_version}_'
+    else:
+        version_val = ''
+    timestamp = datetime.now().strftime(datetime_format)
+    backup_filename = backup_folder / f'{timestamp}_{version_val}{filename.name}'
+    shutil.copy(filename, backup_filename)
+    return backup_filename
