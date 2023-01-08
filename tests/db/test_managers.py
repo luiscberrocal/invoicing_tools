@@ -1,5 +1,6 @@
 import json
 from datetime import datetime
+from pathlib import Path
 
 from pydantic import BaseModel
 
@@ -50,3 +51,8 @@ class TestJSONDatabase:
         db_file = fixtures_folder / 'empty_db.json'
         database = JSONDatabase(db_file)
         assert len(database.list_persons()) == 0
+
+    def test_configuration(self, app_config):
+        database_file = Path(app_config['database']['db_file']['filename'])
+        assert database_file.exists()
+

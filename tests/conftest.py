@@ -5,6 +5,7 @@ from typing import Any, Dict, List
 
 import pytest
 
+from invoicing_tools.config.configuration import ConfigurationManager
 from invoicing_tools.db.managers import JSONDatabase
 
 
@@ -54,3 +55,10 @@ def database(envs_folder) -> JSONDatabase:
     db = JSONDatabase(g_file)
     return db
 
+
+@pytest.fixture(scope='session')
+def app_config(envs_folder) -> Dict[str, Any]:
+    configuration_manager = ConfigurationManager(envs_folder / ConfigurationManager.DEFAULT_CONFIG_FOLDER_NAME)
+    # sample = configuration_manager.get_sample_config()
+    # configuration_manager.write_configuration(sample,overwrite=True)
+    return configuration_manager.get_configuration()
