@@ -1,0 +1,77 @@
+[tool.poetry]
+name = "xxx-xxx"
+version = "0.1.0"
+homepage = "https://github.com/luiscbberrocal/xxx-xxx"
+description = ""
+authors = ["Luis C. Berrocal <luis.berrocal.1942@gmail.com>"]
+readme = "README.md"
+classifiers=[
+    'Development Status :: 2 - Pre-Alpha',
+    'Intended Audience :: Developers',
+    'Natural Language :: English',
+    'Programming Language :: Python :: 3',
+    'Programming Language :: Python :: 3.9',
+    'Programming Language :: Python :: 3.10',
+]
+packages = [
+    { include = "xxx_xxx" },
+    { include = "tests", format = "sdist" },
+]
+
+[tool.poetry.dependencies]
+python = ">=3.9,<3.12"
+
+[tool.poetry.scripts]
+pj-developer-tools = 'xxx_xxx.cli.cli_command:main'
+
+[tool.poetry.group.dev.dependencies]
+bump2version = "^1.0.1"
+# flake8 = "^6.0.0"
+# twine = "^4.0.2"
+# pytest = "^7.2.0"
+# coverage = "^6.5.0"
+# tox = "^4.0.0"
+
+
+[tool.poetry.group.doc.dependencies]
+mkdocs = "^1.4.2"
+# mkdocs-include-markdown-plugin = "^4.0.0"
+# mkdocs-material-extensions = "^1.1.1"
+# mkdocs-material = "^8.5.11"
+# mkdocstrings = "^0.19.0"
+# mkdocs-autorefs = "^0.4.1"
+
+[tool.black]
+line-length = 120
+skip-string-normalization = true
+target-version = ['py39', 'py310']
+include = '\.pyi?$'
+exclude = '''
+/(
+    \.eggs
+  | \.git
+  | \.hg
+  | \.mypy_cache
+  | \.tox
+  | \.venv
+  | _build
+  | buck-out
+  | build
+  | dist
+)/
+'''
+
+[tool.isort]
+multi_line_output = 3
+include_trailing_comma = true
+force_grid_wrap = 0
+use_parentheses = true
+ensure_newline_before_comments = true
+line_length = 120
+skip_gitignore = true
+# you can skip files as below
+#skip_glob = docs/conf.py
+
+[build-system]
+requires = ["poetry-core>=1.2.0"]
+build-backend = "poetry.core.masonry.api"
