@@ -4,6 +4,8 @@ from datetime import datetime
 from pathlib import Path
 from typing import Union, Dict, Any, List
 
+from invoicing_tools.exceptions import InvoicingToolsException
+
 
 def quick_json_write(data: Union[Dict[str, Any], List[Dict[str, Any]]], file: str, output_folder: Path,
                      over_write: bool = True):
@@ -35,7 +37,7 @@ def backup_file(filename: Path, backup_folder: Path, add_version: bool = True) -
     if not backup_folder.is_dir():
         error_message = f'Backup folder has to be a folder.' \
                         f' Supplied: {backup_folder}. Type: {type(backup_folder)}'
-        raise CoverLetterException(error_message)
+        raise InvoicingToolsException(error_message)
 
     datetime_format = '%Y%m%d_%H%M%S'
     if add_version:
