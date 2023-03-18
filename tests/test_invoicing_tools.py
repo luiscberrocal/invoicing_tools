@@ -6,7 +6,6 @@ import pytest
 
 from click.testing import CliRunner
 
-from invoicing_tools import invoicing_tools
 from invoicing_tools import cli
 
 

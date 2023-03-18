@@ -54,18 +54,29 @@ class GDrive:
 
     def _get_folders(self, page_size: int = 10, name: str = None, exact: bool = False):
         query = "mimeType = 'application/vnd.google-apps.folder'"
+        results = list()
+        page_token = None
+        params = dict()
+        params['pageSize'] = page_size
+        params['fields'] = 'nextPageToken, files(id, name, mimeType, kind, parents)'  # type: ignore
+        params['q'] = query
         if name is not None:
             if exact:
-                query = f"{query} and name = '{name}'"
+                params['q'] = f"{query} and name = '{name}'"
             else:
-                query = f"{query} and name contains '{name}'"
-        result = self.resource.list(pageSize=page_size, fields="files(id, name, mimeType, kind, parents)",
-                                    q=query, ).execute()
-        folders = result.get('files', [])
-        # result = resource.list(pageSize=page_size, q=query, ).execute()
-        if exact and len(folders) > 1:
-            raise Exception(f'More than one folder found for folder name "{name}"')
-        return folders
+                params['q'] = f"{query} and name contains '{name}'"
+
+        while True:
+            if page_token:
+                params['pageToken'] = page_token
+
+            result = self.resource.list(**params).execute()
+            folders = result.get('files', [])
+            results.extend(folders)
+            page_token = result.get('nextPageToken')
+            if page_token is None:
+                break
+        return results
 
     def _download_file(self, file_id: str, filename: str, folder: Path):
         try:

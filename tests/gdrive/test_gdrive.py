@@ -1,5 +1,4 @@
 from invoicing_tools.gdrive.gdrive import GDrive
-from invoicing_tools.utils import quick_write
 
 
 def test_list_folders(google_secrets_file):
@@ -26,3 +25,10 @@ def test_download_file(google_secrets_file, output_folder, raw_file_list):
     out_file = google_drive._download_file(file_id, name, output_folder)
     assert out_file.exists()
 
+
+def test__get_folders(google_secrets_file):
+    google_drive = GDrive(google_secrets_file)
+    folders = google_drive._get_folders()
+    d = {"kind": "drive#file", "mimeType": "application/vnd.google-apps.folder", "parents": ["1I8NckBo-INQiA8Zk1aSGABOAvUnk-VlE"], "id": "1IFamx8PU1cP5I-8xOxsi27JSE5bh3OXP", "name": "MGI"}
+    for folder in folders:
+        print(folder)
