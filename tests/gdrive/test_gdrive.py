@@ -1,3 +1,6 @@
+import json
+from pathlib import Path
+
 from invoicing_tools.gdrive.gdrive import GDrive
 
 
@@ -29,7 +32,10 @@ def test_download_file(google_secrets_file, output_folder, raw_file_list):
 def test__get_folders(google_secrets_file):
     google_drive = GDrive(google_secrets_file)
     folders = google_drive._get_folders()
-    d = {"kind": "drive#file", "mimeType": "application/vnd.google-apps.folder",
-         "parents": ["1I8NckBo-INQiA8Zk1aSGABOAvUnk-VlE"], "id": "1IFamx8PU1cP5I-8xOxsi27JSE5bh3OXP", "name": "MGI"}
-    for folder in folders:
-        print(folder)
+
+    var_name = 'folders'
+    data = eval(var_name)
+    filename = Path(__file__).parent.parent.parent / 'output' / f'_{var_name}.json'
+    with open(filename, 'w') as json_file:
+        json.dump(data, json_file, indent=4)
+
