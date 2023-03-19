@@ -15,24 +15,20 @@ class FolderDatabase:
             with open(self.db_file, 'r') as json_file:
                 self.db = json.load(json_file, cls=ModelDecoder)
 
-            modified = self.db_file.stat().st_mtime
-            self.modified_on = datetime.fromtimestamp(modified)
-
-
     def get(self, path: str) -> GoogleDriveObject:
         return self.db.get(path)
 
     def update(self, folders: Dict[str, GoogleDriveObject]):
         with open(self.db_file, 'w') as json_file:
-            json.dump(json_file, folders, cls=ModelEncoder)
+            json.dump(folders, json_file, cls=ModelEncoder)
         self.db = folders
 
     def exists(self) -> bool:
         return self.db_file.exists()
 
-
-
-
-
-
-
+    @property
+    def modified_on(self) -> datetime | None:
+        if self.db_file.exists():
+            modified = self.db_file.stat().st_mtime
+            modified_on = datetime.fromtimestamp(modified)
+            return modified_on
