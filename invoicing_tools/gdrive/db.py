@@ -1,7 +1,7 @@
 import json
 from datetime import datetime
 from pathlib import Path
-from typing import Dict
+from typing import Dict, List
 
 from invoicing_tools.codec import ModelDecoder, ModelEncoder
 from invoicing_tools.gdrive.models import GoogleDriveObject
@@ -17,6 +17,13 @@ class FolderDatabase:
 
     def get(self, path: str) -> GoogleDriveObject:
         return self.db.get(path)
+
+    def find(self, path: str) -> List[GoogleDriveObject]:
+        results = list()
+        for key, folder in self.db.items():
+            if path in key:
+                results.append(folder)
+        return results
 
     def update(self, folders: Dict[str, GoogleDriveObject]):
         with open(self.db_file, 'w') as json_file:
