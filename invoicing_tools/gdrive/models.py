@@ -19,6 +19,7 @@ class GoogleDriveObject(BaseModel):
         arbitrary_types_allowed = True
         allow_population_by_field_name = True
 
+
 def build_folder_objects(folders: List[Dict[str, Any]], ) -> Dict[str, GoogleDriveObject]:
     folder_dict = dict()
     for folder in folders:
@@ -30,9 +31,7 @@ def build_folder_objects(folders: List[Dict[str, Any]], ) -> Dict[str, GoogleDri
     return folder_dict
 
 
-def get_ancestry(folder_dict: Dict[str, GoogleDriveObject],
-                 folder: GoogleDriveObject | None,
-                 ):
+def get_ancestry(folder_dict: Dict[str, GoogleDriveObject], folder: GoogleDriveObject | None):
     ancestry = list()
     if folder is None:
         ancestry.append('')
