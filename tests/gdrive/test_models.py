@@ -1,6 +1,6 @@
 import json
 
-from invoicing_tools.gdrive.models import build_fullpath_dict, build_folder_db
+from invoicing_tools.gdrive.builders import build_fullpath_dict, build_folder_db
 
 
 def test_build_fullpath_dict(output_folder):
@@ -9,7 +9,5 @@ def test_build_fullpath_dict(output_folder):
         folders = json.load(j_file)
 
     results = build_folder_db(folders)
-    for i, r in enumerate(results):
-        print(r)
-        if i > 5:
-            break
+    for k, v in results.items():
+        print(f'{k}: {v}')
