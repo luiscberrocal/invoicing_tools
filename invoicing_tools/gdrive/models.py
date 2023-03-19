@@ -1,6 +1,6 @@
 from typing import List, Optional, Any, Dict
 
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, ValidationError
 
 
 class GoogleDriveObject(BaseModel):
@@ -15,11 +15,18 @@ class GoogleDriveObject(BaseModel):
     def is_folder(self):
         return self.mime_type == 'application/vnd.google-apps.folder'
 
+    class Config:
+        arbitrary_types_allowed = True
+        allow_population_by_field_name = True
 
 def build_folder_objects(folders: List[Dict[str, Any]], ) -> Dict[str, GoogleDriveObject]:
     folder_dict = dict()
     for folder in folders:
-        folder_dict[folder["id"]] = GoogleDriveObject(**folder)
+        try:
+            folder_dict[folder["id"]] = GoogleDriveObject(**folder)
+        except ValidationError as e:
+            print(f'Ignored forlder {folder["name"]}')
+            # raise e
     return folder_dict
 
 
@@ -45,6 +52,12 @@ def build_fullpath_dict(folder_dict: Dict[str, GoogleDriveObject]) -> Dict[str, 
         parent = folder_dict.get(parent_id)
         folder.parent_folder = parent
         lineage = get_ancestry(folder_dict, folder)
-        key = "/".join(lineage)
+        key = "/".join(lineage.reverse())
         new_folder_dict[key] = folder
     return new_folder_dict
+
+
+def build_folder_db(folders: List[Dict[str, Any]]):
+    folders_obj_dict = build_folder_objects(folders)
+    fullpath_dict = build_fullpath_dict(folders_obj_dict)
+    return fullpath_dict
