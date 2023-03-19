@@ -2,9 +2,11 @@ import json
 
 from invoicing_tools.gdrive.builders import build_folder_db
 from invoicing_tools.gdrive.db import FolderDatabase
+from invoicing_tools.gdrive.gdrive import GDrive
+from invoicing_tools.ocr import ocr_pdf_file
 
 
-def test_folder_db(output_folder):
+def test_folder_db(output_folder, google_secrets_file):
     file = output_folder / '_folders.json'
     with open(file, 'r') as j_file:
         folders = json.load(j_file)
@@ -15,6 +17,24 @@ def test_folder_db(output_folder):
     folder_db = FolderDatabase(db_file)
     folder_db.update(results)
     print(folder_db.modified_on)
+    # Get folder with raw invoices
     found = folder_db.find('/DGI/Facturas fiscales/Raw')
-    for i, folder in enumerate(found):
-        print(f'{i} {folder.full_path}')
+    assert len(found) == 1
+    folder = found[0]
+
+    drive = GDrive(google_secrets_file)
+    # Get all files in folder
+    files = drive._list_files(folder.id)
+    # Download all files in folder
+    downloaded_files = list()
+    for f in files:
+        file = drive._download_file(f['id'], f['name'], output_folder)
+        # print(f'{file.name} {file.exists()}')
+        downloaded_files.append(file)
+
+    #OCR file
+    ocr_texts = list()
+    for df in downloaded_files:
+        text = ocr_pdf_file(df)
+        ocr_texts.append(text)
+        print(text)
