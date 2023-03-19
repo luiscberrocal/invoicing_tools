@@ -52,22 +52,33 @@ class GDrive:
                 pickle.dump(creds, token)
         return creds
 
-    def _get_folders(self, page_size: int = 10, name: str = None, exact: bool = False):
+    def _get_folders(self, page_size: int = 100, name: str = None, exact: bool = False):
         query = "mimeType = 'application/vnd.google-apps.folder'"
+        results = list()
+        page_token = None
+        params = dict()
+        params['pageSize'] = page_size
+        params['fields'] = 'nextPageToken, files(id, name, mimeType, kind, parents)'  # type: ignore
+        params['q'] = query
         if name is not None:
             if exact:
-                query = f"{query} and name = '{name}'"
+                params['q'] = f"{query} and name = '{name}'"
             else:
-                query = f"{query} and name contains '{name}'"
-        result = self.resource.list(pageSize=page_size, fields="files(id, name, mimeType, kind, parents)",
-                                    q=query, ).execute()
-        folders = result.get('files', [])
-        # result = resource.list(pageSize=page_size, q=query, ).execute()
-        if exact and len(folders) > 1:
-            raise Exception(f'More than one folder found for folder name "{name}"')
-        return folders
+                params['q'] = f"{query} and name contains '{name}'"
 
-    def _download_file(self, file_id: str, filename: str, folder: Path):
+        while True:
+            if page_token:
+                params['pageToken'] = page_token
+
+            result = self.resource.list(**params).execute()
+            folders = result.get('files', [])
+            results.extend(folders)
+            page_token = result.get('nextPageToken')
+            if page_token is None:
+                break
+        return results
+
+    def _download_file(self, file_id: str, filename: str, folder: Path) -> Path:
         try:
             request = self.resource.get_media(fileId=file_id)
             file = io.BytesIO()
@@ -90,6 +101,9 @@ class GDrive:
     def list_files(self, folder_name: str, page_size: int = 100):
         folder = self._get_folders(name=folder_name, exact=True)
         folder_id = folder[0].get('id')
+        return self._list_files(folder_id, page_size)
+
+    def _list_files(self, folder_id: str, page_size: int = 100):
         query = f"'{folder_id}' in parents"
         result = self.resource.list(pageSize=page_size,
                                     fields="nextPageToken, files(id, name, mimeType, kind, parents)",
