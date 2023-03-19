@@ -52,7 +52,7 @@ class GDrive:
                 pickle.dump(creds, token)
         return creds
 
-    def _get_folders(self, page_size: int = 10, name: str = None, exact: bool = False):
+    def _get_folders(self, page_size: int = 100, name: str = None, exact: bool = False):
         query = "mimeType = 'application/vnd.google-apps.folder'"
         results = list()
         page_token = None
