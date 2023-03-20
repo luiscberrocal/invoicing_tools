@@ -10,6 +10,7 @@ class JurisPerson(BaseModel):
     name: str
     ruc: str
     dv: Optional[str]
+    email: str
 
 
 class FiscalInvoice(BaseModel):
@@ -20,3 +21,5 @@ class FiscalInvoice(BaseModel):
     amount: float
     file: Optional[Path]
     person: Optional[JurisPerson]
+    description: str
+
