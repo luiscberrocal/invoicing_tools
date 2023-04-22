@@ -2,6 +2,7 @@
 import io
 import pickle
 from pathlib import Path
+from typing import Dict, Any
 
 from google.auth.transport.requests import Request
 from google_auth_oauthlib.flow import InstalledAppFlow
@@ -55,18 +56,17 @@ class GDrive:
         return creds
 
     def _get_folders(self, page_size: int = 100, name: str = None, exact: bool = False):
-        query = "mimeType = 'application/vnd.google-apps.folder'"
+        mime_type: str = "mimeType = 'application/vnd.google-apps.folder'"
         results = list()
         page_token = None
-        params = dict()
-        params['pageSize'] = page_size
-        params['fields'] = 'nextPageToken, files(id, name, mimeType, kind, parents)'  # type: ignore
-        params['q'] = query
+        params: Dict[str, Any] = {'pageSize': page_size,
+                                  'fields': 'nextPageToken, files(id, name, mimeType, kind, parents)',
+                                  'q': mime_type}
         if name is not None:
             if exact:
-                params['q'] = f"{query} and name = '{name}'"
+                params['q'] = f'{mime_type} and name = \'{name}\''
             else:
-                params['q'] = f"{query} and name contains '{name}'"
+                params['q'] = f"{mime_type} and name contains '{name}'"
 
         while True:
             if page_token:

@@ -32,7 +32,7 @@ def get_ancestry(folder_dict: Dict[str, GoogleDriveObject], folder: GoogleDriveO
 
 def build_fullpath_dict(folder_dict: Dict[str, GoogleDriveObject]) -> Dict[str, GoogleDriveObject]:
     new_folder_dict = dict()
-    for id, folder in folder_dict.items():
+    for idx, folder in folder_dict.items():
         parent_id = folder.parents[0]
         parent = folder_dict.get(parent_id)
         folder.parent_folder = parent
