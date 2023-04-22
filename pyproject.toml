@@ -29,9 +29,10 @@ pydantic = "^1.10.4"
 pdf2image = "^1.16.2"
 toml = "^0.10.2"
 google-api-python-client = "^2.81.0"
+pdfkit = "^1.0.0"
 
 [tool.poetry.scripts]
-pj-developer-tools = 'invoicing_tools.cli.cli_command:main'
+invoicing-tools = 'invoicing_tools.cli:main'
 
 [tool.poetry.group.dev.dependencies]
 bump2version = "^1.0.1"
