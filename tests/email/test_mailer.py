@@ -8,32 +8,34 @@ from invoicing_tools.email.models import SenderConfig, EmailMessage
 def test_mail(load_environment_variables, output_folder):
     content_file = output_folder / 'tailwind_invoice_template_email.html'
     with open(content_file, 'r') as f:
-        content = f.read()
-
-    content2 = """\
-    <html>
-      <head></head>
-      <body>
-        <h3>Factura Fiscal</h3>
-        <p>Hola!<br>
-           How are you?<br>
-           Here is the <a href="http://www.python.org">link</a> you wanted.
-        </p>
-      </body>
-    </html>
-    """
+        content_template = f.read()
+    recpient = os.getenv('CMMI_EMAIL')
     sender = SenderConfig(password=os.getenv('GMAIL_SECRET'),
                           email=os.getenv('GMAIL_USER'))
 
+    invoice_file = output_folder / 'processed' / 'FFiscal-CMMI-0021-20230423-0943.pdf'
+    invoice_number = 21
+    service = 'mantenimiento de Marzo 2023'
+    amount = '220.00'
+
     invoice_file = output_folder / 'processed' / 'FFiscal-CMMI-0020-20230318-0835.pdf'
-    subject = 'Factura Fiscal No. 20 por mantenimiento Febrero 2023 x $210.00'
+    invoice_number = 20
+    service = 'mantenimiento de Febrero 2023'
+    amount = '210.00'
 
     invoice_file = output_folder / 'processed' / 'FFiscal-CMMI-0019-20230218-0832.pdf'
-    subject = 'Factura Fiscal No. 19 por mantenimiento de Enero 2023'
+    invoice_number = 19
+    service = 'mantenimiento de Enero 2023'
+    amount = '200.00'
 
+    subject = f'Factura Fiscal No. {invoice_number} por {service}'
+    content = content_template.format(
+        invoice_number=invoice_number,
+        service=service, amount=amount
+    )
     email_message = EmailMessage(
         sender_config=sender,
-        recipients=['buceo507@gmail.com'],
+        recipients=[recpient],
         attachments=[invoice_file],
         subject=subject,
         content=content,
