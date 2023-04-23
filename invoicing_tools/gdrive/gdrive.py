@@ -2,6 +2,7 @@
 import io
 import pickle
 from pathlib import Path
+from typing import Dict, Any
 
 from google.auth.transport.requests import Request
 from google_auth_oauthlib.flow import InstalledAppFlow
@@ -13,6 +14,8 @@ from ..exceptions import UploadError
 
 
 class GDrive:
+    """https://developers.google.com/drive/api/guides/folder#python"""
+
     SCOPES = ['https://www.googleapis.com/auth/drive']
 
     def __init__(self, secrets_file: Path):
@@ -53,18 +56,17 @@ class GDrive:
         return creds
 
     def _get_folders(self, page_size: int = 100, name: str = None, exact: bool = False):
-        query = "mimeType = 'application/vnd.google-apps.folder'"
+        mime_type: str = "mimeType = 'application/vnd.google-apps.folder'"
         results = list()
         page_token = None
-        params = dict()
-        params['pageSize'] = page_size
-        params['fields'] = 'nextPageToken, files(id, name, mimeType, kind, parents)'  # type: ignore
-        params['q'] = query
+        params: Dict[str, Any] = {'pageSize': page_size,
+                                  'fields': 'nextPageToken, files(id, name, mimeType, kind, parents)',
+                                  'q': mime_type}
         if name is not None:
             if exact:
-                params['q'] = f"{query} and name = '{name}'"
+                params['q'] = f'{mime_type} and name = \'{name}\''
             else:
-                params['q'] = f"{query} and name contains '{name}'"
+                params['q'] = f"{mime_type} and name contains '{name}'"
 
         while True:
             if page_token:
@@ -104,6 +106,7 @@ class GDrive:
         return self._list_files(folder_id, page_size)
 
     def _list_files(self, folder_id: str, page_size: int = 100):
+        # fixme missing pagination
         query = f"'{folder_id}' in parents"
         result = self.resource.list(pageSize=page_size,
                                     fields="nextPageToken, files(id, name, mimeType, kind, parents)",
@@ -123,3 +126,16 @@ class GDrive:
         except Exception as e:
             error_message = f'Upload error. Type {e.__class__.__name__} error {e}'
             raise UploadError(error_message)
+
+    def create_folder(self, folder_name: str, parent_folder_id: str | None = None) -> str:
+        folder_metadata = {
+            'name': folder_name,
+            # Define the file type as folder
+            'mimeType': 'application/vnd.google-apps.folder',
+            # ID of the parent folder
+            'parents': [parent_folder_id]
+        }
+
+        file = self.service.files().create(body=folder_metadata, fields='id').execute()
+        print(F'Folder ID: "{file.get("id")}".')
+        return file.get('id')

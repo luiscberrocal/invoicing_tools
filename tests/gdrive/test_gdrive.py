@@ -39,3 +39,9 @@ def test__get_folders(google_secrets_file):
     with open(filename, 'w') as json_file:
         json.dump(data, json_file, indent=4)
 
+
+def test_create_folders(google_secrets_file):
+    google_drive = GDrive(google_secrets_file)
+    id = google_drive.create_folder('tempory_test')
+    print(id)
+
