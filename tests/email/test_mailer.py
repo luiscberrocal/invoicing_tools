@@ -13,20 +13,24 @@ def test_mail(load_environment_variables, output_folder):
     sender = SenderConfig(password=os.getenv('GMAIL_SECRET'),
                           email=os.getenv('GMAIL_USER'))
 
-    invoice_file = output_folder / 'processed' / 'FFiscal-CMMI-0021-20230423-0943.pdf'
-    invoice_number = 21
-    service = 'mantenimiento de Marzo 2023'
-    amount = '220.00'
+    # filename = 'FFiscal-CMMI-0021-20230423-0943.pdf'
+    # invoice_file = output_folder / 'processed' / filename
+    # invoice_number = int(filename.split('-')[2])
+    # service = 'mantenimiento de Marzo 2023'
+    # amount = '220.00'
 
-    invoice_file = output_folder / 'processed' / 'FFiscal-CMMI-0020-20230318-0835.pdf'
-    invoice_number = 20
-    service = 'mantenimiento de Febrero 2023'
-    amount = '210.00'
+    # filename = 'FFiscal-CMMI-0020-20230318-0835.pdf'
 
-    invoice_file = output_folder / 'processed' / 'FFiscal-CMMI-0019-20230218-0832.pdf'
-    invoice_number = 19
-    service = 'mantenimiento de Enero 2023'
-    amount = '200.00'
+    # invoice_file = output_folder / 'processed' / filename
+    # invoice_number = int(filename.split('-')[2])
+    # service = 'mantenimiento de Febrero 2023'
+    # amount = '210.00'
+    # print(f'INVOICE {invoice_number}')
+    # raise Exception('xxx')
+    # invoice_file = output_folder / 'processed' / 'FFiscal-CMMI-0019-20230218-0832.pdf'
+    # invoice_number = 19
+    # service = 'mantenimiento de Enero 2023'
+    # amount = '200.00'
 
     subject = f'Factura Fiscal No. {invoice_number} por {service}'
     content = content_template.format(

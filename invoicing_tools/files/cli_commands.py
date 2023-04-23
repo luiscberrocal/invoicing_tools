@@ -14,6 +14,7 @@ from invoicing_tools.naming import rename_fiscal_invoice_with_short_name
 @click.option('-d', '--directory', help='Folder with the scanned invoices.', type=click.Path(exists=True))
 def rename(directory: Path):
     pattern = re.compile(r'Scanned_\d{8}-\d{4}\.(pdf|PDF)')
+    pattern = re.compile(r'Fact.+\.(pdf|PDF)')
     files_to_rename: List[Path] = []
 
     for root, dirs, files in os.walk(directory):
