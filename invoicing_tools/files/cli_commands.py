@@ -21,8 +21,8 @@ def rename(directory: Path):
             if pattern.match(file):
                 files_to_rename.append(Path(root) / file)
                 # click.secho(f'{file}', fg='blue')
-    for idx, file in enumerate(files_to_rename, 1):
-        click.secho(f'{idx} {file.parent}/{file.name}', fg='yellow')
+    for idx, r_file in enumerate(files_to_rename, 1):
+        click.secho(f'{idx} {r_file.parent}/{r_file.name}', fg='yellow')
     file_num = click.prompt('Select file to rename')
     file_to_rename = files_to_rename[int(file_num) - 1]
     webbrowser.open_new_tab(str(file_to_rename))

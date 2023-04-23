@@ -4,6 +4,7 @@ from pathlib import Path
 from typing import Any, Dict, List
 
 import pytest
+from dotenv import load_dotenv
 
 from invoicing_tools.config.configuration import ConfigurationManager
 from invoicing_tools.db.managers import JSONDatabase
@@ -62,3 +63,8 @@ def app_config(envs_folder) -> Dict[str, Any]:
     # sample = configuration_manager.get_sample_config()
     # configuration_manager.write_configuration(sample,overwrite=True)
     return configuration_manager.get_configuration()
+
+@pytest.fixture()
+def load_environment_variables(envs_folder) -> None:
+    file = envs_folder / 'env.txt'
+    load_dotenv(file)
