@@ -30,7 +30,6 @@ def send_email(email_message: EmailMessage):
             # add payload header with filename
             # payload.add_header('Content-Decomposition', 'attachment', filename='invoices_20201101_1120.xlsx')
             fn = os.path.basename(attachment)
-            print(f'>>>>> {fn}')
             payload.add_header(
                 "Content-Disposition",
                 f"attachment; filename= {fn}",

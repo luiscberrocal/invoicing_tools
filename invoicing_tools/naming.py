@@ -1,6 +1,8 @@
+import re
 import shutil
 from datetime import datetime
 from pathlib import Path
+from typing import Tuple
 
 from invoicing_tools.db.managers import JSONDatabase
 from invoicing_tools.models import FiscalInvoice
@@ -33,3 +35,12 @@ def rename_fiscal_invoice_with_short_name(*, short_name: str, invoice_number: in
     if delete_original:
         pdf_file.unlink()
     return full_target_file
+
+
+def get_invoice_info(filename: str) -> Tuple[str, int]:
+    regexp = re.compile(r"^FFiscal-(?P<client>[A-Z]+)-(?P<invoice>\d+)-\d{8}-\d{4}\.pdf$")
+    match = regexp.match(filename)
+    if match:
+        return match.group('client'), int(match.group('invoice'))
+    else:
+        return '', 0
