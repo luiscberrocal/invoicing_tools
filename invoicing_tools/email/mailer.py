@@ -5,6 +5,7 @@ from email.mime.base import MIMEBase
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 
+from invoicing_tools.email.enums import EmailFormat
 from invoicing_tools.email.models import EmailMessage
 
 
@@ -17,7 +18,9 @@ def send_email(email_message: EmailMessage):
     message['Subject'] = email_message.subject
     # The subject line
     # The body and the attachments for the mail
-    message.attach(MIMEText(email_message.content, 'plain'))
+    if email_message.format == EmailFormat.HTML:
+        message.add_header('Content-Type', 'text/html')
+    message.attach(MIMEText(email_message.content, email_message.format.value))
     if email_message.attachments is not None:
         for attachment in email_message.attachments:
             attach_file = open(attachment, 'rb')  # Open the file as binary mode
@@ -27,6 +30,7 @@ def send_email(email_message: EmailMessage):
             # add payload header with filename
             # payload.add_header('Content-Decomposition', 'attachment', filename='invoices_20201101_1120.xlsx')
             fn = os.path.basename(attachment)
+            print(f'>>>>> {fn}')
             payload.add_header(
                 "Content-Disposition",
                 f"attachment; filename= {fn}",
@@ -38,5 +42,6 @@ def send_email(email_message: EmailMessage):
     session.login(email_message.sender_config.email,
                   email_message.sender_config.password)  # login with mail_id and password
     text = message.as_string()
-    session.sendmail(email_message.sender_config.email, email_message.recipients, text)
+    senders_response = session.sendmail(email_message.sender_config.email, email_message.recipients, text)
     session.quit()
+    return senders_response

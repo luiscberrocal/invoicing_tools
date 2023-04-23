@@ -1,7 +1,9 @@
 from pathlib import Path
 from typing import List, Optional
 
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
+
+from invoicing_tools.email.enums import EmailFormat
 
 
 class SenderConfig(BaseModel):
@@ -15,4 +17,5 @@ class EmailMessage(BaseModel):
     content: str
     sender_config: SenderConfig
     attachments: Optional[List[Path] | None]
+    format: EmailFormat = Field(default=EmailFormat.TEXT)
 
