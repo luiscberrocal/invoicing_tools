@@ -13,11 +13,11 @@ def test_mail(load_environment_variables, output_folder):
     sender = SenderConfig(password=os.getenv('GMAIL_SECRET'),
                           email=os.getenv('GMAIL_USER'))
 
-    # filename = 'FFiscal-CMMI-0021-20230423-0943.pdf'
+    # filename = 'FFiscal-CMMI-0017-20221203-1052.pdf'
     # invoice_file = output_folder / 'processed' / filename
     # invoice_number = int(filename.split('-')[2])
-    # service = 'mantenimiento de Marzo 2023'
-    # amount = '220.00'
+    # service = 'mantenimiento de Diciembre 2022'
+    # amount = '200.00'
 
     # filename = 'FFiscal-CMMI-0020-20230318-0835.pdf'
 
