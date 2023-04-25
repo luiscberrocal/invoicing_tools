@@ -24,6 +24,7 @@ class Payment(SQLModel, table=True):
 
 
 class FiscalInvoice(SQLModel, table=True):
+    """https://sqlmodel.tiangolo.com/tutorial/relationship-attributes/back-populates/"""
     id: Optional[int] = Field(default=None, primary_key=True)
     number: int
     date: datetime

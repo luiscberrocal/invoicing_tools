@@ -68,5 +68,5 @@ class InvoiceDatabase:
         self.engine = create_engine(sqlite_url, echo=True)
         SQLModel.metadata.create_all(self.engine)
 
-    
+
 
