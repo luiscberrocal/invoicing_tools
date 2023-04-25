@@ -2,6 +2,8 @@ import json
 from json import JSONDecodeError
 from pathlib import Path
 
+from sqlmodel import create_engine, SQLModel
+
 from invoicing_tools.codec import ModelEncoder, ModelDecoder
 from invoicing_tools.models import JurisPerson, FiscalInvoice
 
@@ -61,6 +63,10 @@ class JSONDatabase:
 class InvoiceDatabase:
 
     def __init__(self, source_file: Path):
-        pass
+        sqlite_url = f"sqlite:///{source_file}"
 
+        self.engine = create_engine(sqlite_url, echo=True)
+        SQLModel.metadata.create_all(self.engine)
+
+    
 
