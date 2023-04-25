@@ -56,3 +56,11 @@ class JSONDatabase:
     def save(self):
         with open(self.db_file, 'w') as json_file:
             json.dump(self.database, json_file, cls=ModelEncoder)
+
+
+class InvoiceDatabase:
+
+    def __init__(self, source_file: Path):
+        pass
+
+
