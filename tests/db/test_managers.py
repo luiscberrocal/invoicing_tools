@@ -4,7 +4,7 @@ from pathlib import Path
 
 from pydantic import BaseModel
 
-from invoicing_tools.db.managers import JSONDatabase
+from invoicing_tools.db.managers import JSONDatabase, InvoiceDatabase
 from invoicing_tools.models import JurisPerson, FiscalInvoice
 
 
@@ -56,3 +56,9 @@ class TestJSONDatabase:
         database_file = Path(app_config['database']['db_file']['filename'])
         assert database_file.exists()
 
+
+class TestInvoiceDatabase:
+
+    def test_create_table(self, output_folder):
+        db_file = output_folder / 'test_db.sqlite'
+        db = InvoiceDatabase(db_file)

@@ -14,15 +14,11 @@ class JurisPerson(BaseModel):
     email: str
 
 
-
-
-class FiscalInvoice(SQLModel, table=True):
-    id: Optional[int] = Field(default=None, primary_key=True)
+class FiscalInvoice(BaseModel):
     number: int
     date: datetime
     ruc: str
     company: Optional[str]
     amount: float
     file: Optional[Path]
-    person_id = Field(default=None, foreign_key='client.id')
     description: str
