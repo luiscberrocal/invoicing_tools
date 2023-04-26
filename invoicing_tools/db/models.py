@@ -3,7 +3,7 @@ from datetime import datetime
 from pathlib import Path
 from typing import Optional, List
 
-from sqlmodel import SQLModel, Field
+from sqlmodel import SQLModel, Field, Relationship
 
 
 class Client(SQLModel, table=True):
@@ -13,6 +13,7 @@ class Client(SQLModel, table=True):
     ruc: str = Field(unique=True)
     dv: Optional[str]
     emails: List[str]
+    fiscal_invoices: List['FiscalInvoice'] = Relationship(back_populates='client')
 
 
 class Payment(SQLModel, table=True):
@@ -21,6 +22,7 @@ class Payment(SQLModel, table=True):
     amount: Decimal
     reference: str
     client_id: int = Field(default=None, foreign_key='client.id')
+    fiscal_invoices: List['FiscalInvoice'] = Relationship(back_populates='client')
 
 
 class FiscalInvoice(SQLModel, table=True):
@@ -33,4 +35,6 @@ class FiscalInvoice(SQLModel, table=True):
     description: str
     date_emailed: Optional[datetime]
     client_id: int = Field(default=None, foreign_key='client.id')
-    payment_id: int = Field(default=None, foreign_key='payment.id')
+    client: Client = Relationship(back_populates='fiscal_invoices')
+    payment_id: Optional[int] = Field(default=None, foreign_key='payment.id')
+    payment: Optional[Payment] = Relationship(back_populates='fiscal_invoices')
