@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "invoicing_tools"
-version = "0.3.4"
+version = "0.3.5"
 homepage = "https://github.com/luiscbberrocal/invoicing_tools"
 description = ""
 authors = ["Luis C. Berrocal <luis.berrocal.1942@gmail.com>"]
@@ -21,7 +21,7 @@ packages = [
 [tool.poetry.dependencies]
 python = ">=3.9,<3.12"
 jinja2 = "^3.1.2"
-pillow = "^9.4.0"
+pillow = "^9.5.0"
 pytesseract = "^0.3.10"
 google-auth-httplib2 = "^0.1.0"
 google-auth-oauthlib = "^0.8.0"
@@ -30,6 +30,7 @@ pdf2image = "^1.16.2"
 toml = "^0.10.2"
 google-api-python-client = "^2.81.0"
 pdfkit = "^1.0.0"
+sqlmodel = "^0.0.8"
 
 [tool.poetry.scripts]
 invoicing-tools = 'invoicing_tools.cli:main'
@@ -44,6 +45,7 @@ tox = "^4.2.6"
 pytest-cov = "^4.0.0"
 mypy = "^0.991"
 flake8-docstrings = "^1.6.0"
+python-dotenv = "^1.0.0"
 
 
 [tool.poetry.group.doc.dependencies]
