@@ -1,6 +1,6 @@
 from pdf2image import convert_from_path
 
-from invoicing_tools.ocr import ocr_file, ocr_lines, ocr_pdf_file, ocr_pdfs_in_folder
+from invoicing_tools.ocr import ocr_file, ocr_lines, ocr_pdf_file, ocr_pdfs_in_folder, read_pdf
 
 
 def test_read_jpeg(output_folder, fixtures_folder):
@@ -35,3 +35,11 @@ def test_ocr_pdf(output_folder):
 def test_ocr_pdf_multiple(output_folder):
     folder = output_folder / 'invoices_to_process'
     ocr_pdfs_in_folder(folder)
+
+
+def test_read_pdf(output_folder):
+    f = output_folder / 'Scanned_20230514-1153.pdf'
+    content = read_pdf(f)
+    for c in content:
+        print(c)
+

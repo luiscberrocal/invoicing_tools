@@ -2,7 +2,8 @@ import logging
 from pathlib import Path
 from time import time
 from typing import List
-
+import numpy as np
+import cv2
 import pytesseract
 from pdf2image import convert_from_path
 
@@ -45,3 +46,28 @@ def ocr_pdfs_in_folder(folder: Path) -> List[Path]:
     per_file = elapsed / len(txt_files)
     logger.debug(f'Processed {len(txt_files)} pdf files in {elapsed:.2f} seconds ({per_file:.2f} seconds per file)')
     return txt_files
+
+
+def read_pdf(pdf_file: Path, dpi: int = 600) -> List[str]:
+    """Suggestion by ChatGPT"""
+    content = []
+    # Load the PDF image and convert it to a list of PIL images
+    pages = convert_from_path(pdf_file, dpi)
+
+    # Loop over each PIL image and process it
+    for i, page in enumerate(pages):
+        # Convert the PIL image to a numpy array
+        img = cv2.cvtColor(np.array(page), cv2.COLOR_RGB2BGR)
+
+        # Apply some image processing to enhance the text
+        gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+        gray = cv2.medianBlur(gray, 3)
+        gray = cv2.threshold(gray, 0, 255, cv2.THRESH_BINARY + cv2.THRESH_OTSU)[1]
+
+        # Perform OCR on the image using pytesseract
+        text = pytesseract.image_to_string(gray)
+
+        # Print the OCR results
+        #  print(f"Page {i + 1} OCR Text:\n{text}")
+        content.append(text)
+    return content
