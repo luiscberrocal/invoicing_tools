@@ -33,6 +33,7 @@ pdfkit = "^1.0.0"
 sqlmodel = "^0.0.8"
 opencv-python = "^4.7.0.72"
 pypdf2 = "^3.0.1"
+boto3 = "^1.26.134"
 
 [tool.poetry.scripts]
 invoicing-tools = 'invoicing_tools.cli:main'
