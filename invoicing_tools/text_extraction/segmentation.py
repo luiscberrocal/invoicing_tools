@@ -67,7 +67,7 @@ def extract_text_from_pdf_old(pdf_path: Path) -> List[str]:
     return content
 
 
-def extract_text_from_pdf(pdf_path: Path) -> List[str]:
+def extract_text_from_pdf_old2(pdf_path: Path) -> List[str]:
     # Extract text from a PDF file
     content = []
     # Open the PDF file
@@ -89,7 +89,51 @@ def extract_text_from_pdf(pdf_path: Path) -> List[str]:
             # Extract text from each region
             for region in text_regions:
                 x, y, w, h = region
-                region_image = preprocessed_image[y:y+h, x:x+w]
+                region_image = preprocessed_image[y:y + h, x:x + w]
                 text = extract_text_from_image(region_image)
                 content.append(text)
+    return content
+
+
+def extract_images_from_pdf(pdf_path: str) -> List[np.ndarray]:
+    # Extract images from a PDF file
+    images = []
+    with open(pdf_path, "rb") as file:
+        reader = PyPDF2.PdfReader(file)
+
+        for page_number in range(len(reader.pages)):
+            page = reader.pages[page_number]
+            xobjs = page['/Resources']['/XObject'].get_object()
+
+            for obj in xobjs:
+                if xobjs[obj]['/Subtype'] == '/Image':
+                    img_data = xobjs[obj]._data
+                    img = np.asarray(bytearray(img_data), dtype=np.uint8)
+                    image = cv2.imdecode(img, cv2.IMREAD_COLOR)
+                    images.append(image)
+
+    return images
+
+
+def extract_text_from_pdf(pdf_path: str) -> List[str]:
+    """ ! Does not work"""
+    # Extract text from a PDF file
+    content = []
+    # Extract images from the PDF
+    images = extract_images_from_pdf(pdf_path)
+
+    # Process each image
+    for image in images:
+        # Preprocess the image
+        preprocessed_image = preprocess_image(image)
+
+        # Segment the text
+        text_regions = segment_text(preprocessed_image)
+
+        # Extract text from each region
+        for region in text_regions:
+            x, y, w, h = region
+            region_image = preprocessed_image[y:y + h, x:x + w]
+            text = extract_text_from_image(region_image)
+            content.append(text)
     return content
