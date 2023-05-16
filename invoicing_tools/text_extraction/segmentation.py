@@ -39,12 +39,12 @@ def extract_text_from_image(image: np.ndarray) -> str:
     return pytesseract.image_to_string(image)
 
 
-def extract_text_from_pdf(pdf_path: Path) -> List[str]:
+def extract_text_from_pdf_old(pdf_path: Path) -> List[str]:
     # Extract text from a PDF file
     content = []
     # Open the PDF file
     with open(pdf_path, "rb") as file:
-        reader = PyPDF2.PdfFileReader(file)
+        reader = PyPDF2.PdfReader(file)
 
         # Process each page in the PDF
         for page_number in range(reader.numPages):
@@ -67,4 +67,29 @@ def extract_text_from_pdf(pdf_path: Path) -> List[str]:
     return content
 
 
+def extract_text_from_pdf(pdf_path: Path) -> List[str]:
+    # Extract text from a PDF file
+    content = []
+    # Open the PDF file
+    with open(pdf_path, "rb") as file:
+        reader = PyPDF2.PdfReader(file)
 
+        # Process each page in the PDF
+        for page_number in range(len(reader.pages)):
+            # Extract the page
+            page = reader.pages[page_number]
+            image = page.extract_images()[0]["image"]
+
+            # Preprocess the image
+            preprocessed_image = preprocess_image(image)
+
+            # Segment the text
+            text_regions = segment_text(preprocessed_image)
+
+            # Extract text from each region
+            for region in text_regions:
+                x, y, w, h = region
+                region_image = preprocessed_image[y:y+h, x:x+w]
+                text = extract_text_from_image(region_image)
+                content.append(text)
+    return content
