@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "invoicing_tools"
-version = "0.3.5"
+version = "0.3.6"
 homepage = "https://github.com/luiscbberrocal/invoicing_tools"
 description = ""
 authors = ["Luis C. Berrocal <luis.berrocal.1942@gmail.com>"]
@@ -31,6 +31,9 @@ toml = "^0.10.2"
 google-api-python-client = "^2.81.0"
 pdfkit = "^1.0.0"
 sqlmodel = "^0.0.8"
+opencv-python = "^4.7.0.72"
+pypdf2 = "^3.0.1"
+boto3 = "^1.26.134"
 
 [tool.poetry.scripts]
 invoicing-tools = 'invoicing_tools.cli:main'

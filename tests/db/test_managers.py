@@ -1,10 +1,10 @@
-import json
 from datetime import datetime
 from pathlib import Path
 
-from pydantic import BaseModel
+from sqlmodel import Session
 
-from invoicing_tools.db.managers import JSONDatabase
+from invoicing_tools.db.managers import JSONDatabase, InvoiceDatabase
+from invoicing_tools.db.models import Client
 from invoicing_tools.models import JurisPerson, FiscalInvoice
 
 
@@ -56,3 +56,15 @@ class TestJSONDatabase:
         database_file = Path(app_config['database']['db_file']['filename'])
         assert database_file.exists()
 
+
+class TestInvoiceDatabase:
+
+    def test_create_table(self, output_folder):
+        client = Client(short_name='JEDI', name='Jedi Council', ruc='1554-55-445-5555',
+                        dv='45', emails="['obiwan@jedi.org']")
+        db_file = output_folder / 'test_db.sqlite'
+        db = InvoiceDatabase(db_file)
+
+        with Session(db.engine) as session:
+            session.add(client)
+            session.commit()

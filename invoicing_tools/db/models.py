@@ -12,8 +12,8 @@ class Client(SQLModel, table=True):
     name: str
     ruc: str = Field(unique=True)
     dv: Optional[str]
-    emails: List[str]
-    fiscal_invoices: List['FiscalInvoice'] = Relationship(back_populates='client')
+    emails: str
+    fiscal_invoices: Optional[List['FiscalInvoice']] = Relationship(back_populates='client')
 
 
 class Payment(SQLModel, table=True):
@@ -22,7 +22,7 @@ class Payment(SQLModel, table=True):
     amount: Decimal
     reference: str
     client_id: int = Field(default=None, foreign_key='client.id')
-    fiscal_invoices: List['FiscalInvoice'] = Relationship(back_populates='client')
+    fiscal_invoices: List['FiscalInvoice'] = Relationship(back_populates='payment')
 
 
 class FiscalInvoice(SQLModel, table=True):
