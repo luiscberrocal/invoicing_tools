@@ -102,7 +102,9 @@ def extract():
     response = process_text_detection(bucket=bucket, document=document, access_key=access_key, secret_key=secret_key,
                                       folder=output_folder)
     print(response)
+    json_response_file = output_folder / f'{document}.json'
 
-
+    with open(json_response_file, 'w') as f:
+        json.dump(response, f)
 if __name__ == '__main__':
     extract()
