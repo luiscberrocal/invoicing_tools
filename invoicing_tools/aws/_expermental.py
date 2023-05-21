@@ -4,6 +4,25 @@ import boto3
 import json
 
 
+def list_files_and_folders_in_bucket(bucket_name, access_key, secret_key):
+    s3 = boto3.client('s3', aws_access_key_id=access_key, aws_secret_access_key=secret_key)
+
+    try:
+        response = s3.list_objects_v2(Bucket=bucket_name)
+
+        if 'Contents' in response:
+            for obj in response['Contents']:
+                file_name = obj['Key']
+                print(f'File: {file_name}')
+
+        if 'CommonPrefixes' in response:
+            for folder in response['CommonPrefixes']:
+                folder_name = folder['Prefix']
+                print(f'Folder: {folder_name}')
+    except Exception as e:
+        print(f'Error listing files and folders: {str(e)}')
+
+
 def delete_file_from_s3(bucket_name, file_name, access_key, secret_key):
     s3 = boto3.client('s3', aws_access_key_id=access_key, aws_secret_access_key=secret_key)
 
@@ -76,7 +95,16 @@ def delete():
 
     delete_file_from_s3(bucket, filename, access_key, secret_key)
 
+def list_bucket():
+    envs_folder = Path(__file__).parent.parent.parent / '.envs'
+    json_file_path = envs_folder / 'invoice-user-aws-config.json'  # Path to the JSON file containing access key and secret key
+
+    access_key, secret_key, bucket = read_credentials_from_json(json_file_path)
+
+    list_files_and_folders_in_bucket(bucket_name=bucket, access_key=access_key, secret_key=secret_key)
+
 if __name__ == '__main__':
-    # upload()
+    upload()
     # download()
-    delete()
+    # delete()
+    list_bucket()
