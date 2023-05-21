@@ -97,7 +97,7 @@ def extract():
 
     json_file_path = envs_folder / 'invoice-user-aws-config.json'  # Path to the JSON file containing access key and secret key
     access_key, secret_key, bucket = read_credentials_from_json(json_file_path)
-    document = 'Scanned_20230514-1153.pdf'
+    document = 'Scanned_20230514-1153.png'
 
     response = process_text_detection(bucket=bucket, document=document, access_key=access_key, secret_key=secret_key,
                                       folder=output_folder)

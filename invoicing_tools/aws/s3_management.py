@@ -45,9 +45,9 @@ def download_file_from_s3(bucket_name, file_name, destination_path, access_key, 
         print(f'Error downloading file: {str(e)}')
 
 
-def upload_file_to_s3(file_path, bucket_name, access_key, secret_key):
+def upload_file_to_s3(file_path:Path, bucket_name, access_key, secret_key):
     s3 = boto3.client('s3', aws_access_key_id=access_key, aws_secret_access_key=secret_key)
-    file_name = file_path.split('/')[-1]  # Extract file name from file path
+    file_name = file_path.name #file_path.split('/')[-1]  # Extract file name from file path
 
     try:
         s3.upload_file(file_path, bucket_name, file_name)
@@ -60,12 +60,12 @@ def upload_file_to_s3(file_path, bucket_name, access_key, secret_key):
 
 
 # Example usage
-def upload():
+def upload(file_to_upload: Path):
     envs_folder = Path(__file__).parent.parent.parent / '.envs'
     json_file_path = envs_folder / 'invoice-user-aws-config.json'  # Path to the JSON file containing access key and secret key
     access_key, secret_key, bucket = read_credentials_from_json(json_file_path)
 
-    file_to_upload = '/home/luiscberrocal/PycharmProjects/invoicing_tools/output/Scanned_20230514-1153.pdf'  # Path to the file you want to upload
+    # file_to_upload = '/home/luiscberrocal/PycharmProjects/invoicing_tools/output/Scanned_20230514-1153.pdf'  # Path to the file you want to upload
 
     upload_file_to_s3(file_to_upload, bucket, access_key, secret_key)
 
@@ -81,14 +81,15 @@ def download():
     download_file_from_s3(bucket, filename, download_folder, access_key, secret_key)
 
 
-def delete():
+def delete(filename: str):
     envs_folder = Path(__file__).parent.parent.parent / '.envs'
     json_file_path = envs_folder / 'invoice-user-aws-config.json'  # Path to the JSON file containing access key and secret key
-    filename = 'Scanned_20230514-1153.pdf'
+    # filename = 'Scanned_20230514-1153.pdf'
 
     access_key, secret_key, bucket = read_credentials_from_json(json_file_path)
 
     delete_file_from_s3(bucket, filename, access_key, secret_key)
+
 
 def list_bucket():
     envs_folder = Path(__file__).parent.parent.parent / '.envs'
@@ -98,8 +99,13 @@ def list_bucket():
 
     list_files_and_folders_in_bucket(bucket_name=bucket, access_key=access_key, secret_key=secret_key)
 
+
 if __name__ == '__main__':
-    upload()
+    doc = 'Scanned_20230514-1153.png'
+    library_folder = Path(__file__).parent.parent.parent
+    output_folder = library_folder / 'output'
+    upload_file = output_folder / doc
+    upload(upload_file)
     # download()
-    # delete()
-    list_bucket()
+    # delete(filename=doc)
+    # list_bucket()
