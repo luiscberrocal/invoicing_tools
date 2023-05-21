@@ -8,3 +8,6 @@ class ConfigurationError(InvoicingToolsException):
 
 class UploadError(Exception):
     pass
+
+class ConversionError(InvoicingToolsException):
+    pass
