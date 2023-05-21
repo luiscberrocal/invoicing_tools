@@ -1,7 +1,8 @@
 from pathlib import Path
 
 import boto3
-import json
+
+from invoicing_tools.aws.config import read_credentials_from_json
 
 
 def list_files_and_folders_in_bucket(bucket_name, access_key, secret_key):
@@ -56,22 +57,16 @@ def upload_file_to_s3(file_path, bucket_name, access_key, secret_key):
 
 
 # Read access key and secret key from a JSON file
-def read_credentials_from_json(file_path):
-    with open(file_path, 'r') as json_file:
-        data = json.load(json_file)
-        access_key = data['access_key']
-        secret_key = data['secret_key']
-        bucket = data['bucket']
-    return access_key, secret_key, bucket
 
 
 # Example usage
 def upload():
     envs_folder = Path(__file__).parent.parent.parent / '.envs'
     json_file_path = envs_folder / 'invoice-user-aws-config.json'  # Path to the JSON file containing access key and secret key
+    access_key, secret_key, bucket = read_credentials_from_json(json_file_path)
+
     file_to_upload = '/home/luiscberrocal/PycharmProjects/invoicing_tools/output/Scanned_20230514-1153.pdf'  # Path to the file you want to upload
 
-    access_key, secret_key, bucket = read_credentials_from_json(json_file_path)
     upload_file_to_s3(file_to_upload, bucket, access_key, secret_key)
 
 
