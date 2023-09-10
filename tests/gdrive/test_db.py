@@ -28,7 +28,7 @@ def test_folder_db(output_folder, google_secrets_file):
     # Download all files in folder
     downloaded_files = list()
     for f in files:
-        file = drive._download_file(f['id'], f['name'], output_folder)
+        file = drive.download_file_from_id(f['id'], f['name'], output_folder)
         # print(f'{file.name} {file.exists()}')
         downloaded_files.append(file)
 

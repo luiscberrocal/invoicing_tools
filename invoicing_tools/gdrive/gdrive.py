@@ -80,7 +80,7 @@ class GDrive:
                 break
         return results
 
-    def _download_file(self, file_id: str, filename: str, folder: Path) -> Path:
+    def download_file_from_id(self, file_id: str, filename: str, folder: Path) -> Path:
         try:
             request = self.resource.get_media(fileId=file_id)
             file = io.BytesIO()
