@@ -14,8 +14,8 @@ def test_mail(load_environment_variables, output_folder):
                           email=os.getenv('GMAIL_USER'))
 
     filename = 'FFiscal-CMMI-0025-20230806-1245.pdf'  # FIXME
-    service = 'mantenimiento de Julio 2023'  # FIXME
-    amount = '220.00'  # FIXME
+    service = 'mantenimiento de julio 2023'  # fixme
+    amount = '220.00'  # fixme
 
     invoice_file = output_folder / 'processed' / filename
     invoice_number = int(filename.split('-')[2])
