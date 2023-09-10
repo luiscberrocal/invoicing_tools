@@ -47,7 +47,7 @@ def test_create_folders(google_secrets_file):
 
 def test__list_folder(google_secrets_file):
     google_drive = GDrive(google_secrets_file)
-    files = google_drive._list_files('1IN-bELJFpckwOefIBSxlVn653NdeUDxj')
+    files = google_drive.list_files_from_id('1IN-bELJFpckwOefIBSxlVn653NdeUDxj')
     for i, f in enumerate(files, 1):
         print(f'{i} {f}')
 

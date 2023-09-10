@@ -24,7 +24,7 @@ def test_folder_db(output_folder, google_secrets_file):
 
     drive = GDrive(google_secrets_file)
     # Get all files in folder
-    files = drive._list_files(folder.id)
+    files = drive.list_files_from_id(folder.id)
     # Download all files in folder
     downloaded_files = list()
     for f in files:
