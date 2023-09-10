@@ -80,7 +80,7 @@ class GDrive:
                 break
         return results
 
-    def _download_file(self, file_id: str, filename: str, folder: Path) -> Path:
+    def download_file_from_id(self, file_id: str, filename: str, folder: Path) -> Path:
         try:
             request = self.resource.get_media(fileId=file_id)
             file = io.BytesIO()
@@ -103,9 +103,9 @@ class GDrive:
     def list_files(self, folder_name: str, page_size: int = 100):
         folder = self._get_folders(name=folder_name, exact=True)
         folder_id = folder[0].get('id')
-        return self._list_files(folder_id, page_size)
+        return self.list_files_from_id(folder_id, page_size)
 
-    def _list_files(self, folder_id: str, page_size: int = 100):
+    def list_files_from_id(self, folder_id: str, page_size: int = 100):
         # fixme missing pagination
         query = f"'{folder_id}' in parents"
         result = self.resource.list(pageSize=page_size,

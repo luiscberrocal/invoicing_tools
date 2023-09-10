@@ -25,7 +25,7 @@ def test_download_file(google_secrets_file, output_folder, raw_file_list):
     file_id = file_data['id']
     name = file_data['name']
     google_drive = GDrive(google_secrets_file)
-    out_file = google_drive._download_file(file_id, name, output_folder)
+    out_file = google_drive.download_file_from_id(file_id, name, output_folder)
     assert out_file.exists()
 
 
@@ -44,4 +44,10 @@ def test_create_folders(google_secrets_file):
     google_drive = GDrive(google_secrets_file)
     id = google_drive.create_folder('tempory_test')
     print(id)
+
+def test__list_folder(google_secrets_file):
+    google_drive = GDrive(google_secrets_file)
+    files = google_drive.list_files_from_id('1IN-bELJFpckwOefIBSxlVn653NdeUDxj')
+    for i, f in enumerate(files, 1):
+        print(f'{i} {f}')
 

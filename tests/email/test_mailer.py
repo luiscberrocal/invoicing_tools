@@ -13,24 +13,13 @@ def test_mail(load_environment_variables, output_folder):
     sender = SenderConfig(password=os.getenv('GMAIL_SECRET'),
                           email=os.getenv('GMAIL_USER'))
 
-    # filename = 'FFiscal-CMMI-0017-20221203-1052.pdf'
-    # invoice_file = output_folder / 'processed' / filename
-    # invoice_number = int(filename.split('-')[2])
-    # service = 'mantenimiento de Diciembre 2022'
-    # amount = '200.00'
+    filename = 'FFiscal-CMMI-0025-20230806-1245.pdf'  # FIXME
+    service = 'mantenimiento de julio 2023'  # fixme
+    amount = '220.00'  # fixme
 
-    # filename = 'FFiscal-CMMI-0020-20230318-0835.pdf'
-
-    # invoice_file = output_folder / 'processed' / filename
-    # invoice_number = int(filename.split('-')[2])
-    # service = 'mantenimiento de Febrero 2023'
-    # amount = '210.00'
-    # print(f'INVOICE {invoice_number}')
-    # raise Exception('xxx')
-    # invoice_file = output_folder / 'processed' / 'FFiscal-CMMI-0019-20230218-0832.pdf'
-    # invoice_number = 19
-    # service = 'mantenimiento de Enero 2023'
-    # amount = '200.00'
+    invoice_file = output_folder / 'processed' / filename
+    invoice_number = int(filename.split('-')[2])
+    print(f'INVOICE {invoice_number}')
 
     subject = f'Factura Fiscal No. {invoice_number} por {service}'
     content = content_template.format(
@@ -46,5 +35,6 @@ def test_mail(load_environment_variables, output_folder):
         format=EmailFormat.HTML
     )
 
+    raise Exception('xxx')  # FIXME
     response = send_email(email_message)
     print(response)

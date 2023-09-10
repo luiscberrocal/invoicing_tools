@@ -24,11 +24,11 @@ def test_folder_db(output_folder, google_secrets_file):
 
     drive = GDrive(google_secrets_file)
     # Get all files in folder
-    files = drive._list_files(folder.id)
+    files = drive.list_files_from_id(folder.id)
     # Download all files in folder
     downloaded_files = list()
     for f in files:
-        file = drive._download_file(f['id'], f['name'], output_folder)
+        file = drive.download_file_from_id(f['id'], f['name'], output_folder)
         # print(f'{file.name} {file.exists()}')
         downloaded_files.append(file)
 
