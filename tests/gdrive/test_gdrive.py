@@ -45,3 +45,9 @@ def test_create_folders(google_secrets_file):
     id = google_drive.create_folder('tempory_test')
     print(id)
 
+def test__list_folder(google_secrets_file):
+    google_drive = GDrive(google_secrets_file)
+    files = google_drive._list_files('1IN-bELJFpckwOefIBSxlVn653NdeUDxj')
+    for i, f in enumerate(files, 1):
+        print(f'{i} {f}')
+

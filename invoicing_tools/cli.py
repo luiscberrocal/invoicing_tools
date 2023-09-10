@@ -6,7 +6,7 @@ import click
 from invoicing_tools.email.cli_commands import email
 from invoicing_tools.files.cli_commands import rename
 
-
+from invoicing_tools.gdrive.cli_commands import list_files
 @click.group()
 def main(args=None):
     """Console script for invoicing_tools."""
@@ -20,5 +20,6 @@ def main(args=None):
 
 main.add_command(rename)
 main.add_command(email)
+main.add_command(list_files)
 if __name__ == "__main__":
     sys.exit(main())  # pragma: no cover
