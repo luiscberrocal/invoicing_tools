@@ -35,7 +35,7 @@ def list_files(folder_id: str, date_filter: str):
 
     index = click.prompt('Select file', type=int)
     file_index_to_download = files[index]['id']
-    download_filename = files[index]['id']
+    download_filename = files[index]['name']
     print(file_index_to_download)
     down = gdrive.download_file_from_id(file_id=file_index_to_download, filename=download_filename,
                                         folder=download_folder)

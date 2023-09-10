@@ -37,7 +37,7 @@ def rename_fiscal_invoice_with_short_name(*, short_name: str, invoice_number: in
     return full_target_file
 
 
-def get_invoice_info(filename: str) -> Tuple[str, int]:
+def get_invoice_info_from_filename(filename: str) -> Tuple[str, int]:
     regexp = re.compile(r"^FFiscal-(?P<client>[A-Z]+)-(?P<invoice>\d+)-\d{8}-\d{4}\.pdf$")
     match = regexp.match(filename)
     if match:
