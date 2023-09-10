@@ -6,6 +6,7 @@ from typing import List, Any, Dict
 import click
 from rich.pretty import pprint
 
+from invoicing_tools.email.models import SenderConfig
 from invoicing_tools.naming import get_invoice_info_from_filename
 
 
@@ -30,3 +31,8 @@ def email(directory: Path):
     # print(Path(file_to_email))
     fn: Path = file_data_to_email['file']
     webbrowser.open_new_tab(str(fn.absolute()))
+    recipient = os.getenv('CMMI_EMAIL', default='')
+    # print(f'{recipient: =}')
+    sender = SenderConfig(password=os.getenv('GMAIL_SECRET'),
+                          email=os.getenv('GMAIL_USER'))
+    print(sender)
