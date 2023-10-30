@@ -4,6 +4,7 @@ import pickle
 from pathlib import Path
 from typing import Dict, Any
 
+from google.auth.exceptions import RefreshError
 from google.auth.transport.requests import Request
 from google_auth_oauthlib.flow import InstalledAppFlow
 from googleapiclient.discovery import build
@@ -44,15 +45,22 @@ class GDrive:
             # If token is expired, it will be refreshed,
             # else, we will request a new one.
             if creds and creds.expired and creds.refresh_token:
-                creds.refresh(Request())
+                try:
+                    creds.refresh(Request())
+                except RefreshError:
+                    creds = self._get_new_token(token_file)
             else:
-                flow = InstalledAppFlow.from_client_secrets_file(str(self.secrets_file), self.SCOPES)
-                creds = flow.run_local_server(port=0)
+                creds = self._get_new_token(token_file)
 
             # Save the access token in token.pickle
             # file for future usage
-            with open(token_file, 'wb') as token:
-                pickle.dump(creds, token)
+        return creds
+
+    def _get_new_token(self, token_file):
+        flow = InstalledAppFlow.from_client_secrets_file(str(self.secrets_file), self.SCOPES)
+        creds = flow.run_local_server(port=0)
+        with open(token_file, 'wb') as token:
+            pickle.dump(creds, token)
         return creds
 
     def _get_folders(self, page_size: int = 100, name: str = None, exact: bool = False):
