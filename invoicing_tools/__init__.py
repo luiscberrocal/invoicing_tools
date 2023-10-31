@@ -3,7 +3,7 @@
 
 __author__ = """Luis Carlos Berrocal"""
 __email__ = 'luis.berrocal.1942@gmail.com'
-__version__ = '0.4.0'
+__version__ = '0.4.1'
 
 from invoicing_tools.config.configuration import ConfigurationManager
 
