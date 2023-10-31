@@ -9,7 +9,7 @@ from invoicing_tools.gdrive.gdrive import GDrive
 
 @click.command()
 @click.option('-f', '--folder-id', help='Google drive directory id', required=False)
-@click.option('-df', '--date_filter', help='Date filter', required=False)
+@click.option('-df', '--date_filter', help='Date filter. Either today or date in %Y%m%d', required=False)
 def list_files(folder_id: str, date_filter: str):
     config = CONFIGURATION_MANAGER.get_configuration()
     # pprint(config)
