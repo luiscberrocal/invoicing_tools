@@ -1,19 +1,41 @@
 import os
+import sys
 from pathlib import Path
 from typing import List, Any, Dict
 
 import click
+from pydantic import ValidationError
 from rich.pretty import pprint
 
 from invoicing_tools.email.enums import EmailFormat
 from invoicing_tools.email.mailer import send_email
 from invoicing_tools.email.models import SenderConfig, EmailMessage
+from invoicing_tools.exceptions import ConfigurationError
 from invoicing_tools.naming import get_invoice_info_from_filename
+
+
+def load_gmail_environment_variables():
+    from dotenv import load_dotenv
+    from pathlib import Path
+    environment_folder = Path(__file__).parent.parent.parent / '.envs'
+    environment_file = environment_folder / 'env.txt'
+    if not environment_file.exists():
+        error_message = f'Environment file {environment_file} not found.'
+        raise ConfigurationError(error_message)
+    dotenv_path = Path(environment_file)
+    load_dotenv(dotenv_path=dotenv_path)
 
 
 @click.command()
 @click.option('-d', '--directory', type=click.Path(exists=True))
 def email(directory: Path):
+    try:
+        load_gmail_environment_variables()
+    except ConfigurationError as e:
+        message = f'Could not load email environment variables. Error {e}'
+        click.secho(message, fg='red')
+        sys.exit(100)
+
     files_to_email: List[Dict[str, Any]] = []
 
     for root, dirs, files in os.walk(directory):
@@ -34,12 +56,18 @@ def email(directory: Path):
     # webbrowser.open_new_tab(str(invoice_file.absolute()))
     recipient = os.getenv('CMMI_EMAIL')
     print(f'{recipient}')
-    sender = SenderConfig(password=os.getenv('GMAIL_SECRET'),
-                          email=os.getenv('GMAIL_USER'))
-    print(sender)
+    try:
+        sender = SenderConfig(password=os.getenv('GMAIL_SECRET'),
+                              email=os.getenv('GMAIL_USER'))
+        print(sender)
+    except ValidationError:
+        message = 'Cannot build configuration. Either the GMAIL_SECRET or GMAIL_USER enviroment variables are not set.'
+        click.secho(message, fg='red')
+        sys.exit(100)
+
     invoice_number = int(invoice_file.name.split('-')[2])
     invoice_number = click.prompt('Invoice number', default=invoice_number)
-    month = click.prompt('Month')
+    month = click.prompt('Month, ie. agosto')
     year = click.prompt('Year', default=2023)
     service_type = click.prompt('Service type', default='mantenimiento')
     service = f'{service_type} de {month} {year}'  # fixme
