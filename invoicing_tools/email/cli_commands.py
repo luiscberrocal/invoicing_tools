@@ -47,6 +47,8 @@ def email(directory: Path):
                                 'invoice_number': invoice_number}
                 files_to_email.append(invoice_dict)
                 # click.secho(f'{file}', fg='blue')
+    files_to_email = sorted(files_to_email, key=lambda x: x['file'].name)
+
     for idx, r_file in enumerate(files_to_email, 1):
         click.secho(f'{idx} {r_file["file"].parent}/{r_file["file"].name}', fg='yellow')
     file_num = click.prompt('Select file to rename', type=int)
