@@ -2,7 +2,7 @@ import json
 from pathlib import Path
 
 from invoicing_tools.gdrive.gdrive import GDrive
-
+# TODO Mark tests as integration
 
 def test_list_folders(google_secrets_file):
     google_drive = GDrive(google_secrets_file)
