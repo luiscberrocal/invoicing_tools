@@ -24,17 +24,15 @@ python = ">=3.10,<3.13"
 jinja2 = "^3.1.2"
 pillow = "^9.5.0"
 pytesseract = "^0.3.10"
-google-auth-httplib2 = "^0.1.0"
-google-auth-oauthlib = "^0.8.0"
 pydantic = "^2.5.3"
 pdf2image = "^1.16.2"
 toml = "^0.10.2"
-google-api-python-client = "^2.81.0"
 pdfkit = "^1.0.0"
 sqlmodel = "^0.0.14"
 opencv-python = "^4.7.0.72"
 pypdf2 = "^3.0.1"
 boto3 = "^1.26.134"
+gdrive-pydantic-wrapper = "^0.2.6"
 
 [tool.poetry.scripts]
 invoicing-tools = 'invoicing_tools.cli:main'
