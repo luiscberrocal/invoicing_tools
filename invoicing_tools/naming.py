@@ -6,7 +6,9 @@ from typing import Tuple
 
 from invoicing_tools.db.managers import JSONDatabase
 from invoicing_tools.models import FiscalInvoice
+import logging
 
+logger = logging.getLogger(__name__)
 
 def rename_fiscal_invoice(invoice: FiscalInvoice, database: JSONDatabase, pdf_file: Path, target_folder: Path,
                           invoice_date: datetime,
@@ -26,6 +28,10 @@ def rename_fiscal_invoice_with_short_name(*, short_name: str, invoice_number: in
                                           invoice_date: datetime,
                                           target_folder: Path, prefix: str = 'FFiscal',
                                           delete_original: bool = True) -> Path:
+    if not target_folder.exists():
+        logger.warning(f'Target folder does not exist {target_folder}. Creating')
+        target_folder.mkdir()
+
     sep = '-'
     timestamp = invoice_date.strftime('%Y%m%d-%H%M')
     target_filename = f'{prefix}{sep}{short_name}{sep}{invoice_number:04}{sep}{timestamp}{pdf_file.suffix}'
