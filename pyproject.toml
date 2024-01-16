@@ -32,7 +32,7 @@ sqlmodel = "^0.0.14"
 opencv-python = "^4.7.0.72"
 pypdf2 = "^3.0.1"
 boto3 = "^1.26.134"
-gdrive-pydantic-wrapper = "^0.2.6"
+gdrive-pydantic-wrapper = "0.3.0"
 
 [tool.poetry.scripts]
 invoicing-tools = 'invoicing_tools.cli:main'

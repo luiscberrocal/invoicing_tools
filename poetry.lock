@@ -463,13 +463,13 @@ pydocstyle = ">=2.1"
 
 [[package]]
 name = "gdrive-pydantic-wrapper"
-version = "0.2.6"
+version = "0.3.0"
 description = "Skeleton project created by Cookiecutter PyPackage."
 optional = false
 python-versions = ">=3.10,<3.13"
 files = [
-    {file = "gdrive_pydantic_wrapper-0.2.6-py3-none-any.whl", hash = "sha256:420ecbd90c6b7b0bf2d7d67207edbf46b8ae154c1d171cd407f7922d28ad51fb"},
-    {file = "gdrive_pydantic_wrapper-0.2.6.tar.gz", hash = "sha256:4e47b64225486aa387eb47d532ef7ab955a649df38704b9b8ff9c0135210494b"},
+    {file = "gdrive_pydantic_wrapper-0.3.0-py3-none-any.whl", hash = "sha256:2b4c25253fd96842f5dacaa2e52d15558ff321f4cae8bcd1c1ac0dd309318db3"},
+    {file = "gdrive_pydantic_wrapper-0.3.0.tar.gz", hash = "sha256:40733006a911a29c9e05047f0f34702146805d5f17dfe1c89b2c3d52da8355cd"},
 ]
 
 [package.dependencies]
@@ -2490,4 +2490,4 @@ testing = ["flake8 (<5)", "func-timeout", "jaraco.functools", "jaraco.itertools"
 [metadata]
 lock-version = "2.0"
 python-versions = ">=3.10,<3.13"
-content-hash = "3dd4492b918c806b2019fe5aa9ebf904cec1c2e6e3e9b23a4d9e0bdeea645baf"
+content-hash = "3990aff7a4d04847eef67ec00b8f7364fa39c566098a42d6d53e6859dbcadab8"
