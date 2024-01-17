@@ -63,7 +63,7 @@ def email(directory: Path):
                               email=os.getenv('GMAIL_USER'))
         # print(sender)
     except ValidationError:
-        message = 'Cannot build configuration. Either the GMAIL_SECRET or GMAIL_USER enviroment variables are not set.'
+        message = 'Cannot build configuration. Either the GMAIL_SECRET or GMAIL_USER environment variables are not set.'
         click.secho(message, fg='red')
         sys.exit(100)
 
