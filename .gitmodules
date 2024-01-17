@@ -1,0 +1,3 @@
+[submodule "simple_mail"]
+	path = invoicing_tools/libs/simple_mail
+	url = git@github.com:luiscberrocal/simple-mail.git

@@ -2,9 +2,9 @@ from datetime import datetime
 from pathlib import Path
 
 import click
+from gdrive_pydantic_wrapper.google_drive.gdrive import GDrive
 
 from invoicing_tools import CONFIGURATION_MANAGER
-from invoicing_tools.gdrive.gdrive import GDrive
 
 
 @click.command()
@@ -27,7 +27,9 @@ def list_files(folder_id: str, date_filter: str):
     # pprint(f'{folder_id = }')
     # pprint(secrets_file)
     gdrive = GDrive(secrets_file=secrets_file)
-    files = gdrive.list_files_from_id(folder_id=folder_id)
+    files = gdrive.list_content(parent_folder_id=folder_id)
+    # gdrive = GDrive(secrets_file=secrets_file)
+    # files = gdrive.list_files_from_id(folder_id=folder_id)
     for i, file in enumerate(files):
         filename = file["name"]
         if date_filter in filename:

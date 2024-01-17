@@ -47,21 +47,23 @@ def email(directory: Path):
                                 'invoice_number': invoice_number}
                 files_to_email.append(invoice_dict)
                 # click.secho(f'{file}', fg='blue')
+    files_to_email = sorted(files_to_email, key=lambda x: x['file'].name)
+
     for idx, r_file in enumerate(files_to_email, 1):
         click.secho(f'{idx} {r_file["file"].parent}/{r_file["file"].name}', fg='yellow')
-    file_num = click.prompt('Select file to rename', type=int)
+    file_num = click.prompt('Select file to email', type=int)
     file_data_to_email = files_to_email[file_num - 1]
     # print(Path(file_to_email))
     invoice_file: Path = file_data_to_email['file']
     # webbrowser.open_new_tab(str(invoice_file.absolute()))
     recipient = os.getenv('CMMI_EMAIL')
-    print(f'{recipient}')
+    # print(f'{recipient}')
     try:
         sender = SenderConfig(password=os.getenv('GMAIL_SECRET'),
                               email=os.getenv('GMAIL_USER'))
-        print(sender)
+        # print(sender)
     except ValidationError:
-        message = 'Cannot build configuration. Either the GMAIL_SECRET or GMAIL_USER enviroment variables are not set.'
+        message = 'Cannot build configuration. Either the GMAIL_SECRET or GMAIL_USER environment variables are not set.'
         click.secho(message, fg='red')
         sys.exit(100)
 
